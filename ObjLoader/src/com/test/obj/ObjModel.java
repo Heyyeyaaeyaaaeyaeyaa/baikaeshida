@@ -15,11 +15,15 @@ public class ObjModel
 	private float[] textures;
 	private float[] normals;
 	private short[] indices;
-	public ObjModel(File data)
+	public static final int VERTEX_ONLY=0;
+	public static final int VERTEX_VT=1;
+	public static final int VERTEX_N=2;
+	public static final int VERTEX_VT_N=3;
+	public ObjModel(File data,int mode)
 	{
-		this.loadData(data);
+		this.loadData(data,mode);
 	}
-	public void loadData(File data)
+	public void loadData(File data,int mode)
 	{
 		InputStream input;
 		BufferedReader reader;
@@ -55,6 +59,7 @@ public class ObjModel
 				{//頂點材質座標
 					textureLines.add(st.nextToken());
 					textureLines.add(st.nextToken());
+					//System.out.println("TXXXXXXXXXXXXXX");
 				}
 				else if(lineType.equals("vn"))
 				{//頂點法向量
@@ -65,25 +70,52 @@ public class ObjModel
 				else if(lineType.equals("f"))
 				{//三角形對應，頂點、材質、法向量
 					//三組座標
-					String v1=st.nextToken();
-					String v2=st.nextToken();
-					String v3=st.nextToken();
+					int tokenCount = st.countTokens();
+					String v;
+					StringTokenizer st_temp;
 					
-					StringTokenizer st1=new StringTokenizer(v1,SLASH);
-					StringTokenizer st2=new StringTokenizer(v2,SLASH);
-					StringTokenizer st3=new StringTokenizer(v3,SLASH);
-					
-					verticeIndiceLines.add(st1.nextToken());
-					verticeIndiceLines.add(st2.nextToken());
-					verticeIndiceLines.add(st3.nextToken());
-					
-					textureIndiceLines.add(st1.nextToken());
-					textureIndiceLines.add(st2.nextToken());
-					textureIndiceLines.add(st3.nextToken());
-					
-					normalIndiceLines.add(st1.nextToken());
-					normalIndiceLines.add(st2.nextToken());
-					normalIndiceLines.add(st3.nextToken());
+					switch(mode){
+					case VERTEX_ONLY:
+						
+						for(int i=0;i<tokenCount;i++){
+							String str = st.nextToken();
+							//System.out.println(str);
+							verticeIndiceLines.add(str);
+						}
+						break;
+					case VERTEX_VT:
+						
+						for(int i=0;i<tokenCount;i++){
+							v = st.nextToken();
+							st_temp = new StringTokenizer(v,SLASH);
+							
+							verticeIndiceLines.add(st_temp.nextToken());
+							textureIndiceLines.add(st_temp.nextToken());
+						}
+						break;
+					case VERTEX_N:
+						for(int i=0;i<tokenCount;i++){
+							v = st.nextToken();
+							st_temp = new StringTokenizer(v,SLASH);
+							
+							verticeIndiceLines.add(st_temp.nextToken());
+							normalIndiceLines.add(st_temp.nextToken());
+						}
+						break;
+					case VERTEX_VT_N:
+						for(int i=0;i<tokenCount;i++){
+							v = st.nextToken();
+							st_temp = new StringTokenizer(v,SLASH);
+							
+							verticeIndiceLines.add(st_temp.nextToken());
+							textureIndiceLines.add(st_temp.nextToken());
+							normalIndiceLines.add(st_temp.nextToken());
+						}
+						break;
+					default:
+						break;
+				}
+	
 				}
 			}
 			//System.out.println("textureLines:"+textureLines.toString());
@@ -111,15 +143,18 @@ public class ObjModel
 				
 				
 				//材質點
+				if(!textureIndiceLines.isEmpty()){
 				int textureIndice=Integer.valueOf(textureIndiceLines.get(i))-1;
 				textures[i*2]=Float.valueOf(textureLines.get(textureIndice*2));
 				textures[i*2+1]=Float.valueOf(textureLines.get(textureIndice*2+1));
-				
+				}
 				//法向量座標
+				if(!normalIndiceLines.isEmpty()){
 				int normalIndice=Integer.valueOf(normalIndiceLines.get(i))-1;
 				normals[i*3]=Float.valueOf(normalLines.get(normalIndice*3));
 				normals[i*3+1]=Float.valueOf(normalLines.get(normalIndice*3+1));
-				normals[i*3+2]=Float.valueOf(normalLines.get(normalIndice*3+2));      
+				normals[i*3+2]=Float.valueOf(normalLines.get(normalIndice*3+2));    
+				}
 			}
 		}
 		catch (FileNotFoundException e)

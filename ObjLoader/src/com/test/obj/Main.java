@@ -15,8 +15,13 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		File dataFile=new File(System.getProperty("user.dir"),"Simba01.obj");
-		ObjModel obj=new ObjModel(dataFile);
+		String filename = "Simba01";
+		int mode = ObjModel.VERTEX_VT_N;
+		//把檔名跟mode打上去就就能直接使用了
+		
+		File dataFile=new File(System.getProperty("user.dir"),filename+".obj");
+		ObjModel obj=new ObjModel(dataFile,mode);
+		
 		float[] vertices=obj.getVertices();
 		float[] textures=obj.getTextures();
 		float[] normals=obj.getNormals();
@@ -26,11 +31,12 @@ public class Main
 		data1.setTextures(textures);
 		data1.setNormals(normals);
 		data1.setIndices(indices);
-		System.out.println("textures:"+Arrays.toString(textures));
+		//System.out.println("textures:"+Arrays.toString(textures));
+		//System.out.println("textures:"+textures.length);
 		//System.out.println(Arrays.toString(textures));
 		//System.out.println(Arrays.toString(normals));
 		//System.out.println(Arrays.toString(indices));
-		File data=new File(System.getProperty("user.dir"),"Simba01.data");
+		File data=new File(System.getProperty("user.dir"),filename+".data");
 		try
 		{
 			ObjectOutputStream objOut=null;

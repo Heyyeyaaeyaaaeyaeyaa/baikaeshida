@@ -18,8 +18,11 @@ import com.test.obj.ObjData;
 
 public class Test03 implements Renderer, OnTouchListener
 {
-	private Shape simba01,simba02;
+	private Shape[] shapes;
 	private Context context;
+
+	private int shapeCount = 1;
+	private String[] dataFileName;
 	
 	/* Rotation values */
 	private float xrot;					//X Rotation
@@ -64,12 +67,15 @@ public class Test03 implements Renderer, OnTouchListener
 		lightPositionBuffer.put(lightPosition);
 		lightPositionBuffer.position(0);
 		
-		LoadObjData loadObjData=new LoadObjData(context,"Simba01.data");
-		ObjData objData=loadObjData.getObjData();
-		simba01=new Shape(objData.getVertices(),objData.getTextures(),objData.getNormals(),objData.getIndices());
-		loadObjData=new LoadObjData(context,"Simba02.data");
-		objData=loadObjData.getObjData();
-		simba02=new Shape(objData.getVertices(),objData.getTextures(),objData.getNormals(),objData.getIndices());
+		shapes = new Shape[shapeCount];
+		dataFileName = new String[shapeCount];
+		dataFileName[0] = "Simba01.data";
+		//dataFileName[1] = "Simba02.data";
+		for(int i=0;i<shapeCount;i++){
+			LoadObjData loadObjData=new LoadObjData(context,dataFileName[i]);
+			ObjData objData=loadObjData.getObjData();
+			shapes[i]=new Shape(objData.getVertices(),objData.getTextures(),objData.getNormals(),objData.getIndices());
+		}
 	}
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
@@ -81,8 +87,9 @@ public class Test03 implements Renderer, OnTouchListener
 		gl.glEnable(GL10.GL_LIGHT0);
 		gl.glEnable(GL10.GL_LIGHTING);
 		
-		simba01.loadTexture(gl, context,R.raw.simba1);
-		simba02.loadTexture(gl, context, R.raw.simba2);
+		shapes[0].loadTexture(gl, context,R.raw.simba1);
+		//shapes[1].loadTexture(gl, context,R.raw.simba2);
+		
 		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
 		gl.glClearDepthf(1.0f); 					//Depth Buffer Setup
@@ -105,8 +112,9 @@ public class Test03 implements Renderer, OnTouchListener
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
 		
-		simba01.draw(gl);
-		simba02.draw(gl);
+		for(int i=0;i<shapeCount;i++){
+			shapes[i].draw(gl);
+		}
 		
 	}
 
