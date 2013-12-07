@@ -4,3 +4,8 @@
 ###Member:  
 - LOG    
 - Kazma     
+- David
+- 
+------------
+###Target:
+- Be a professional programmer
