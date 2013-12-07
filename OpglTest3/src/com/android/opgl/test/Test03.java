@@ -20,7 +20,8 @@ public class Test03 implements Renderer, OnTouchListener
 {
 	private Shape[] shapes;
 	private Context context;
-
+	
+	private String testFilename = "dchair_obj.data";
 	private int shapeCount = 1;
 	private String[] dataFileName;
 	
@@ -69,7 +70,7 @@ public class Test03 implements Renderer, OnTouchListener
 		
 		shapes = new Shape[shapeCount];
 		dataFileName = new String[shapeCount];
-		dataFileName[0] = "Simba01.data";
+		dataFileName[0] = testFilename;
 		//dataFileName[1] = "Simba02.data";
 		for(int i=0;i<shapeCount;i++){
 			LoadObjData loadObjData=new LoadObjData(context,dataFileName[i]);

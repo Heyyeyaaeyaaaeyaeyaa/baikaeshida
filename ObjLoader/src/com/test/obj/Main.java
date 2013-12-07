@@ -5,7 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import java.util.Scanner;
+
 
 public class Main
 {
@@ -17,6 +18,16 @@ public class Main
 	{
 		String filename = "Simba01";
 		int mode = ObjModel.VERTEX_VT_N;
+		Scanner sc = new Scanner(System.in);
+		System.out.println("0.VERTEX_ONLY");
+		System.out.println("1.VERTEX_VT");
+		System.out.println("2.VERTEX_N");
+		System.out.println("3.VERTEX_VT_N");
+		System.out.print("Enter filename:");
+		filename = sc.next();
+		System.out.print("Enter mode(0~3):");
+		mode = sc.nextInt();
+		
 		//把檔名跟mode打上去就就能直接使用了
 		
 		File dataFile=new File(System.getProperty("user.dir"),filename+".obj");
@@ -48,5 +59,6 @@ public class Main
 		{
 			e.printStackTrace();
 		}
+		System.out.println("Done!");
 	}
 }
