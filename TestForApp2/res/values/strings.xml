@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TestForApp</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="button_start">Start</string>
+    <string name="button_obj_site">ObjectFileSite</string>
+    <string name="button_about">About</string>
+    
+    
+    <string name="title">Furniture Simulating Camera</string>
+    <string name="title_activity_choose_obj">ChooseObjActivity</string>
+    <string name="title_choose_the_furniture_object">Choose the Furniture Object</string>
+    <string name="title_activity_camera">CameraActivity</string>    
+    <string name="title_activity_obj_site">ObjSiteActivity</string>
+    <string name="title_input_the_obj_site">Input the Obj Site</string>
+    <string name="title_activity_about">AboutActivity</string>
+    
+
+    
+    <string name="button_back">Back</string>
+    <string name="button_select">Select</string>
+    <string name="button_apply">Apply</string> 
+    <string name="button_capture">Capture</string>
+    <string name="button_exit">Exit</string>
+    
+    <string name="text_verson">Verson:1.0</string>
+    <string name="text_default_obj_site">sdcard/FurnitureSimulatingCamera/FurnitureObject/</string>
+    
+    
+
+</resources>
