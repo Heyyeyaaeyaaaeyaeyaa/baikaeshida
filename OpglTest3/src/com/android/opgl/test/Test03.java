@@ -21,13 +21,18 @@ public class Test03 implements Renderer, OnTouchListener
 	private Shape[] shapes;
 	private Context context;
 	
-	private String testFilename = "dchair_obj.data";
-	private int shapeCount = 1;
+	private String testFilename = "Simba01.data";
+	private int shapeCount = 2;
+	private int testTexture = R.raw.simba1;
 	private String[] dataFileName;
 	
 	/* Rotation values */
 	private float xrot;					//X Rotation
 	private float yrot;					//Y Rotation
+	private float xmove;
+	private float ymove;
+	private float zmove;
+	private int mode = 0;
 	
 	/* 
 	 * The initial light values for ambient and diffuse
@@ -71,7 +76,7 @@ public class Test03 implements Renderer, OnTouchListener
 		shapes = new Shape[shapeCount];
 		dataFileName = new String[shapeCount];
 		dataFileName[0] = testFilename;
-		//dataFileName[1] = "Simba02.data";
+		dataFileName[1] = "Simba02.data";
 		for(int i=0;i<shapeCount;i++){
 			LoadObjData loadObjData=new LoadObjData(context,dataFileName[i]);
 			ObjData objData=loadObjData.getObjData();
@@ -88,8 +93,8 @@ public class Test03 implements Renderer, OnTouchListener
 		gl.glEnable(GL10.GL_LIGHT0);
 		gl.glEnable(GL10.GL_LIGHTING);
 		
-		shapes[0].loadTexture(gl, context,R.raw.simba1);
-		//shapes[1].loadTexture(gl, context,R.raw.simba2);
+		shapes[0].loadTexture(gl, context,testTexture);
+		shapes[1].loadTexture(gl, context,R.raw.simba2);
 		
 		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
@@ -107,12 +112,11 @@ public class Test03 implements Renderer, OnTouchListener
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
-		gl.glTranslatef(0.0f, 0.0f, -7.0f);	//Move down 1.0 Unit And Into The Screen 7.0
+		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, -7.0f-zmove);	//Move down 1.0 Unit And Into The Screen 7.0
 		gl.glScalef(0.02f, 0.02f, 0.02f);
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
-		
 		for(int i=0;i<shapeCount;i++){
 			shapes[i].draw(gl);
 		}
@@ -142,14 +146,26 @@ public class Test03 implements Renderer, OnTouchListener
 	{
 		float x = event.getX();
         float y = event.getY();
+        if(event.getAction() == MotionEvent.ACTION_DOWN) 
+        {
+        	mode = (mode+1)%3;
+        }
+
         if(event.getAction() == MotionEvent.ACTION_MOVE) 
         {
         	//Calculate the change
         	float dx = x - oldX;
 	        float dy = y - oldY;
-        	//Rotate around the axis otherwise  		
+        	//Rotate around the axis otherwise  	
+	        if(mode==0){
     	     xrot += dy * TOUCH_SCALE;
-    	     yrot += dx * TOUCH_SCALE;    	
+    	     yrot += dx * TOUCH_SCALE;
+	        }else if(mode==1) {
+    	     xmove += dx * TOUCH_SCALE * 0.015;
+    	     ymove += dy * TOUCH_SCALE * 0.015;
+	        }else{
+	         zmove += dy * TOUCH_SCALE * 0.025;
+	        }
         //A press on the screen
         }
         oldX = x;

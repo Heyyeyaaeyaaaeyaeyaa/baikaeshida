@@ -24,7 +24,7 @@ public class Main
 		System.out.println("2.VERTEX_N");
 		System.out.println("3.VERTEX_VT_N");
 		System.out.print("Enter filename:");
-		filename = sc.next();
+		filename = sc.nextLine();
 		System.out.print("Enter mode(0~3):");
 		mode = sc.nextInt();
 		
