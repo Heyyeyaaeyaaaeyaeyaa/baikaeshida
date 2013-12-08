@@ -1,16 +1,24 @@
 package com.example.testforapp2;
 
+//import com.example.dragimagedemo.R;
+
+//import com.example.dragimagedemo.ImageViewHelper;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class CameraActivity extends Activity {
@@ -19,6 +27,10 @@ public class CameraActivity extends Activity {
 	private Camera camera;
 	private CameraPreview preview;
 	private Singleton singleton;
+	
+	private DisplayMetrics dm; //螢幕
+	private Bitmap bitmap;//set Image
+	private ImageView imageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +46,8 @@ public class CameraActivity extends Activity {
 		frameLayout = (FrameLayout)this.findViewById(R.id.camera_frameLayout);
 		camera = getCameraInstance();
 		preview = new CameraPreview(this, camera);
+		dm = new DisplayMetrics();
+		imageView = (ImageView)this.findViewById(R.id.camera_imageView);
 		
 		frameLayout.addView(preview);
 		
@@ -53,6 +67,13 @@ public class CameraActivity extends Activity {
 				// TODO Auto-generated method stub
 				/*拍照*/
 			}});
+		
+		getWindowManager().getDefaultDisplay().getMetrics(dm); //取得螢幕資訊
+		
+		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.chrome);
+		imageView.setImageBitmap(bitmap);
+		new ImageViewHelper(dm,imageView,bitmap);
+		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, 1000).show();
 	}
 
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
