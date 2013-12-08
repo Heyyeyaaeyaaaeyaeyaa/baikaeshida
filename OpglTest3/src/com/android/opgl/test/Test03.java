@@ -146,27 +146,28 @@ public class Test03 implements Renderer, OnTouchListener
 	{
 		float x = event.getX();
         float y = event.getY();
-        if(event.getAction() == MotionEvent.ACTION_DOWN) 
+        int pointerCount = event.getPointerCount();
+        switch(event.getAction() ) 
         {
-        	mode = (mode+1)%3;
-        }
-
-        if(event.getAction() == MotionEvent.ACTION_MOVE) 
-        {
-        	//Calculate the change
-        	float dx = x - oldX;
-	        float dy = y - oldY;
-        	//Rotate around the axis otherwise  	
-	        if(mode==0){
-    	     xrot += dy * TOUCH_SCALE;
-    	     yrot += dx * TOUCH_SCALE;
-	        }else if(mode==1) {
-    	     xmove += dx * TOUCH_SCALE * 0.015;
-    	     ymove += dy * TOUCH_SCALE * 0.015;
-	        }else{
-	         zmove += dy * TOUCH_SCALE * 0.025;
-	        }
-        //A press on the screen
+        	case MotionEvent.ACTION_DOWN:
+        		break;
+        	case MotionEvent.ACTION_MOVE:
+        		float dx = x - oldX;
+    	        float dy = y - oldY;
+        		if(pointerCount == 1)
+        		{
+        			xrot += dy * TOUCH_SCALE;
+        			yrot += dx * TOUCH_SCALE;
+        		}
+        		else if(pointerCount ==2)
+        		{
+        			xmove += dx * TOUCH_SCALE * 0.015;
+        			ymove += dy * TOUCH_SCALE * 0.015;        			
+        		}
+        		else
+        		{
+        			zmove += dy * TOUCH_SCALE * 0.025;
+        		}
         }
         oldX = x;
         oldY = y;
