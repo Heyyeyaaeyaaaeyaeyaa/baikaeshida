@@ -112,8 +112,8 @@ public class Test03 implements Renderer, OnTouchListener
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
-		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, -7.0f-zmove);	//Move down 1.0 Unit And Into The Screen 7.0
-		gl.glScalef(0.02f, 0.02f, 0.02f);
+		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, -7.0f);	//Move down 1.0 Unit And Into The Screen 7.0
+		gl.glScalef(0.02f-zmove, 0.02f-zmove, 0.02f-zmove);
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
@@ -144,8 +144,8 @@ public class Test03 implements Renderer, OnTouchListener
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
-		float x = event.getX();
-        float y = event.getY();
+		float x = event.getX(0);
+        float y = event.getY(0);
         int pointerCount = event.getPointerCount();
         switch(event.getAction() ) 
         {
@@ -154,20 +154,23 @@ public class Test03 implements Renderer, OnTouchListener
         	case MotionEvent.ACTION_MOVE:
         		float dx = x - oldX;
     	        float dy = y - oldY;
-        		if(pointerCount == 1)
+        		switch(pointerCount)
         		{
-        			xrot += dy * TOUCH_SCALE;
-        			yrot += dx * TOUCH_SCALE;
+        			case 1:
+        				xrot += dy * TOUCH_SCALE;
+        				yrot += dx * TOUCH_SCALE;
+        				break;
+        			case 2:
+        				zmove +=dy*0.0001;
+        				break;
+        			case 3:
+        				xmove += dx * TOUCH_SCALE * 0.015;
+        				ymove += dy * TOUCH_SCALE * 0.015;
+        				break;
         		}
-        		else if(pointerCount ==2)
-        		{
-        			xmove += dx * TOUCH_SCALE * 0.015;
-        			ymove += dy * TOUCH_SCALE * 0.015;        			
-        		}
-        		else
-        		{
-        			zmove += dy * TOUCH_SCALE * 0.025;
-        		}
+        		break;
+        	case MotionEvent.ACTION_UP:
+        		break;
         }
         oldX = x;
         oldY = y;
