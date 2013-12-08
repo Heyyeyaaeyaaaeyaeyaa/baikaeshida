@@ -25,7 +25,7 @@
     <string name="button_capture">Capture</string>
     <string name="button_exit">Exit</string>
     
-    <string name="text_verson">Verson:1.0</string>
+    <string name="text_verson">Verson:0.1</string>
     <string name="text_default_obj_site">sdcard/FurnitureSimulatingCamera/FurnitureObject/</string>
     
     
