@@ -31,3 +31,6 @@ proguard/
 # LOG added
 .DS_store
 .metadata/
+
+# Android application package file
+*.apk
