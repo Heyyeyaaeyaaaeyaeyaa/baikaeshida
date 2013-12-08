@@ -43,6 +43,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		camera.setDisplayOrientation(90);//畫面順時鐘旋轉90度
 		camera.startPreview();
 	}
 
