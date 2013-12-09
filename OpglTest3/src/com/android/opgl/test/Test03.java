@@ -10,6 +10,8 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -32,7 +34,7 @@ public class Test03 implements Renderer, OnTouchListener
 	private float xmove;
 	private float ymove;
 	private float zmove;
-	private int mode = 0;
+	private int lock = 0;
 	
 	/* 
 	 * The initial light values for ambient and diffuse
@@ -50,6 +52,7 @@ public class Test03 implements Renderer, OnTouchListener
 	/* Variables and factor for the input handler */
 	private float oldX;
     private float oldY;
+    float oldDist=0,newDist=0;
 	private final float TOUCH_SCALE = 0.2f;			//Proved to be good for normal rotation
 	public Test03(Context context)
 	{
@@ -147,6 +150,8 @@ public class Test03 implements Renderer, OnTouchListener
 		float x = event.getX(0);
         float y = event.getY(0);
         int pointerCount = event.getPointerCount();
+        if(pointerCount==2)
+        	newDist = spacing(event);
         switch(event.getAction() ) 
         {
         	case MotionEvent.ACTION_DOWN:
@@ -157,24 +162,42 @@ public class Test03 implements Renderer, OnTouchListener
         		switch(pointerCount)
         		{
         			case 1:
-        				xrot += dy * TOUCH_SCALE;
-        				yrot += dx * TOUCH_SCALE;
+        				if(lock<1){
+        					lock = 0;
+        					xrot += dy * TOUCH_SCALE;
+        					yrot += dx * TOUCH_SCALE;
+        				}
         				break;
-        			case 2:
-        				zmove +=dy*0.0001;
+        			case 2:    
+        				if(lock<2){
+        					lock = 1;
+        					zmove -=(newDist-oldDist)*0.0001;
+        					zmove = Math.min(0.02f, zmove);
+        				}
         				break;
         			case 3:
-        				xmove += dx * TOUCH_SCALE * 0.015;
-        				ymove += dy * TOUCH_SCALE * 0.015;
+        				if(lock<3){
+        					lock = 2;
+        					xmove += dx * TOUCH_SCALE * 0.016;
+        					ymove += dy * TOUCH_SCALE * 0.016;
+        				}
         				break;
         		}
         		break;
         	case MotionEvent.ACTION_UP:
+        		lock = 0;
         		break;
         }
+        if(event.getPointerCount()==2)
+        	oldDist = spacing(event);
         oldX = x;
         oldY = y;
 		return true;
+	}
+	private float spacing(MotionEvent event) { 
+		float x = event.getX(0) - event.getX(1); 
+		float y = event.getY(0) - event.getY(1); 
+		return FloatMath.sqrt(x * x + y * y); 
 	}
 	
 }
