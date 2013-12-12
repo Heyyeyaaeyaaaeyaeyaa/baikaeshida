@@ -4,6 +4,10 @@ package com.example.testforapp2;
 
 //import com.example.dragimagedemo.ImageViewHelper;
 
+
+
+
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -15,7 +19,9 @@ import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.util.DisplayMetrics;
 import android.view.Menu;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -30,11 +36,14 @@ public class CameraActivity extends Activity {
 	
 	private DisplayMetrics dm; //螢幕
 	private Bitmap bitmap;//set Image
-	private ImageView imageView;
+	private GLSurfaceView glSurface;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		glSurface=new GLSurfaceView(this);
+		Test03 test03=new Test03(glSurface.getContext());
 		//在當前的activity中註冊廣播
 		IntentFilter filter = new IntentFilter();  
 		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver指定一個action，即要監聽的消息名字  
@@ -47,8 +56,6 @@ public class CameraActivity extends Activity {
 		camera = getCameraInstance();
 		preview = new CameraPreview(this, camera);
 		dm = new DisplayMetrics();
-		imageView = (ImageView)this.findViewById(R.id.camera_imageView);
-		
 		frameLayout.addView(preview);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
@@ -69,10 +76,12 @@ public class CameraActivity extends Activity {
 			}});
 		
 		getWindowManager().getDefaultDisplay().getMetrics(dm); //取得螢幕資訊
-		
-		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.chrome);
-		imageView.setImageBitmap(bitmap);
-		new ImageViewHelper(dm,imageView,bitmap);
+
+		//glSurface.setRenderer(test03);
+		//glSurface.setOnTouchListener(test03);
+		//addContentView(glSurface, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+
 		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, 1000).show();
 	}
 

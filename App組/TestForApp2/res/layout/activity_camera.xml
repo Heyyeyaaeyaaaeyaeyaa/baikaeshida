@@ -17,17 +17,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" >
-    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/camera_imageView"
-        android:layout_width="match_parent"
-        android:layout_height="460dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:scaleType="matrix" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/camera_text_title"
