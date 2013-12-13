@@ -43,5 +43,4 @@ public class ObjData implements Serializable
 	{
 		this.indices = indices;
 	}
-	
 }
