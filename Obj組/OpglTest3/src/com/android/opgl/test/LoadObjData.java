@@ -3,11 +3,10 @@ package com.android.opgl.test;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
+import com.test.obj.ObjData;
 import android.content.Context;
 import android.util.Log;
 
-import com.test.obj.ObjData;
 
 public class LoadObjData
 {
@@ -33,7 +32,7 @@ public class LoadObjData
 		}
 	}
 	public ObjData getObjData()
-	{
+	{	
 		return objData;
 	}
 	

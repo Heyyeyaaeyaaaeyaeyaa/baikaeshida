@@ -7,16 +7,14 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.test.obj.ObjData;
 import android.content.Context;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
-import com.test.obj.ObjData;
 
 public class Test03 implements Renderer, OnTouchListener
 {

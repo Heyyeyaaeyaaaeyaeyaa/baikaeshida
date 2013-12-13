@@ -1,9 +1,10 @@
-package com.example.testforapp2;
+package com.test.obj;
 
 import java.io.Serializable;
 
 public class ObjData implements Serializable
 {
+
 	private float[] vertices;
 	private float[] textures;
 	private float[] normals;

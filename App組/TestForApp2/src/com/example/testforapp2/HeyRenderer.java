@@ -7,17 +7,18 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.test.obj.ObjData;
+
+
 import android.content.Context;
-import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
+import android.opengl.GLU;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-
-public class Test03 implements Renderer, OnTouchListener
+public class HeyRenderer implements Renderer, OnTouchListener
 {
 	private Shape[] shapes;
 	private Context context;
@@ -53,7 +54,7 @@ public class Test03 implements Renderer, OnTouchListener
     private float oldY;
     float oldDist=0,newDist=0;
 	private final float TOUCH_SCALE = 0.2f;			//Proved to be good for normal rotation
-	public Test03(Context context)
+	public HeyRenderer(Context context)
 	{
 		this.context=context;
 		
@@ -99,7 +100,7 @@ public class Test03 implements Renderer, OnTouchListener
 		shapes[1].loadTexture(gl, context,R.raw.simba2);
 		
 		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
+		//gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
 		gl.glClearDepthf(1.0f); 					//Depth Buffer Setup
 		gl.glEnable(GL10.GL_TEXTURE_2D);			//Enable Texture Mapping
 		gl.glEnable(GL10.GL_DEPTH_TEST); 			//Enables Depth Testing
@@ -111,6 +112,7 @@ public class Test03 implements Renderer, OnTouchListener
 	public void onDrawFrame(GL10 gl)
 	{
 		//Clear Screen And Depth Buffer
+		
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
@@ -122,7 +124,6 @@ public class Test03 implements Renderer, OnTouchListener
 		for(int i=0;i<shapeCount;i++){
 			shapes[i].draw(gl);
 		}
-		
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height)

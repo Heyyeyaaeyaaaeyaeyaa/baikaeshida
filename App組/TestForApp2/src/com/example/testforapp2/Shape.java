@@ -47,19 +47,16 @@ public class Shape
 		vertexBuffer = byteBuf.asFloatBuffer();
 		vertexBuffer.put(vertices);
 		vertexBuffer.position(0);
-		
 		byteBuf = ByteBuffer.allocateDirect(texture.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		textureBuffer = byteBuf.asFloatBuffer();
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
-		
 		byteBuf = ByteBuffer.allocateDirect(normals.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		normalBuffer = byteBuf.asFloatBuffer();
 		normalBuffer.put(normals);
 		normalBuffer.position(0);
-		
 		byteBuf = ByteBuffer.allocateDirect(indices.length*2);
 		byteBuf.order(ByteOrder.nativeOrder());
 		indexBuffer=byteBuf.asShortBuffer();

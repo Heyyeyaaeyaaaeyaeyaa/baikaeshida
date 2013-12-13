@@ -3,10 +3,9 @@ package com.example.testforapp2;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
+import com.test.obj.ObjData;
 import android.content.Context;
 import android.util.Log;
-
 
 public class LoadObjData
 {
@@ -20,7 +19,6 @@ public class LoadObjData
 			objIn=new ObjectInputStream(new BufferedInputStream(context.getAssets().open(fileName)));
 			objData=(ObjData)objIn.readObject();
 			objIn.close();
-
 		}
 		catch (IOException e)
 		{
@@ -32,7 +30,7 @@ public class LoadObjData
 		}
 	}
 	public ObjData getObjData()
-	{
+	{	
 		return objData;
 	}
 	
