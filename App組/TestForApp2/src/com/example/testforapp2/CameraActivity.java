@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -73,8 +74,8 @@ public class CameraActivity extends Activity {
 		buttonBack = (Button)this.findViewById(R.id.camera_button_back);
 		buttonCapture = (Button)this.findViewById(R.id.camera_button_capture);
 		frameLayout = (FrameLayout)this.findViewById(R.id.camera_frameLayout);
-		camera = getCameraInstance();
-		preview = new CameraPreview(this, camera);
+		preview = new CameraPreview(this);
+
 		dm = new DisplayMetrics();
 		frameLayout.addView(preview);
 		
@@ -94,7 +95,6 @@ public class CameraActivity extends Activity {
 				// TODO Auto-generated method stub
 				/*拍照*/
 			}});
-		
 		getWindowManager().getDefaultDisplay().getMetrics(dm); //取得螢幕資訊
 		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, Toast.LENGTH_SHORT).show();
 	}
@@ -116,11 +116,12 @@ public class CameraActivity extends Activity {
 	}
 	
 	private Camera getCameraInstance() {
-	    Camera camera = null;
+		String TAG = "camera99";
+    	Camera camera = null;
 	    try {
 	        camera = Camera.open();
 	    } catch (Exception e) {
-	        // cannot get camera or does not exist
+	    	Log.e(TAG ,"FUCK IT!");
 	    }
 	    return camera;
 	  }
@@ -136,6 +137,11 @@ public class CameraActivity extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+        if (camera != null) {
+            preview.setCamera(null);
+            camera.release();
+            camera = null;
+        }
 	}
 
 	@Override
@@ -148,5 +154,10 @@ public class CameraActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+	}
+	protected void onResume(){
+		super.onResume();
+		camera = getCameraInstance();
+        preview.setCamera(camera);
 	}
 }
