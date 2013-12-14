@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public class ObjData implements Serializable
 {
-
 	private float[] vertices;
 	private float[] textures;
 	private float[] normals;
@@ -44,5 +43,4 @@ public class ObjData implements Serializable
 	{
 		this.indices = indices;
 	}
-	
 }

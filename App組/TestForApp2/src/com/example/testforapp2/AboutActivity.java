@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class AboutActivity extends Activity {
 	private Button buttonBack;
 	private Singleton singleton;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,7 +23,7 @@ public class AboutActivity extends Activity {
 		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver指定一個action，即要監聽的消息名字  
         registerReceiver(mBoradcastReceiver,filter); //動態註冊監聽  靜態的話 在AndroidManifest.xml中定義
 		setContentView(R.layout.activity_about);
-			
+		
 		buttonBack = (Button)this.findViewById(R.id.about_button_back);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
@@ -55,7 +56,7 @@ public class AboutActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Toast.makeText(this.getApplicationContext(), "AboutDestroy", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this.getApplicationContext(), "AboutDestroy", 1000).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽
 	}
 

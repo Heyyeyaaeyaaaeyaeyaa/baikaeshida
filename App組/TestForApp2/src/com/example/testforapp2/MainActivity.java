@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
         registerReceiver(mBoradcastReceiver,filter); //動態註冊監聽  靜態的話 在AndroidManifest.xml中定義
 		
 		setContentView(R.layout.activity_main);
-		Toast.makeText(this.getApplicationContext(), "MainCreate", 1000).show();
+		Toast.makeText(this.getApplicationContext(), "MainCreat", 1000).show();
 		
 		buttonStart = (Button)this.findViewById(R.id.main_button_start);
 		buttonObjSite = (Button)this.findViewById(R.id.main_button_obj_site);
