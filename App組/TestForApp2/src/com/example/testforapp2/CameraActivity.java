@@ -90,7 +90,9 @@ public class CameraActivity extends Activity {
 		Test03 test03=new Test03(glSurface.getContext());
 		glSurface.setZOrderOnTop(true);
 		glSurface.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		//glSurface.getHolder().setFormat(PixelFormat.RGBA_8888);
 		glSurface.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+		//glSurface.setAlpha(0);
 		glSurface.setRenderer(test03);
 		glSurface.setOnTouchListener(test03);
 		//glSurface.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
