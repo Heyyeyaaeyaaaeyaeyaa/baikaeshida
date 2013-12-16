@@ -1,26 +1,25 @@
 package com.example.testforapp2;
 
-import java.io.File;
-
+import android.os.Bundle;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Gallery;
 import android.widget.Toast;
 
 public class ChooseObjActivity extends Activity {
 	private Button buttonBack, buttonSelect;
+	private ImageAdapter imgAdapter = null;
+	private Gallery gallery = null;
 	private Singleton singleton;
-	private TextView objListView;
-	private static final String TAG = "SDCardActivity";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,9 +29,35 @@ public class ChooseObjActivity extends Activity {
 		registerReceiver(mBoradcastReceiver,filter); //動態註冊監聽  靜態的話 在AndroidManifest.xml中定義
 		setContentView(R.layout.activity_choose_obj);
 		
+		gallery = (Gallery) findViewById(R.id.gallery);  
+        imgAdapter = new ImageAdapter(this);  
+        
+        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {  
+            @Override  
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  
+                Toast.makeText(ChooseObjActivity.this, "点击图片 " + (position + 1), 100).show();  
+            }  
+        });          // 设置点击图片的监听事件（需要用手点击才触发，滑动时不触发）  
+        gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  
+            @Override  
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {  
+                Toast.makeText(ChooseObjActivity.this, "选中图片 " + (position + 1), 20).show();  
+            }  
+      
+            @Override  
+            public void onNothingSelected(AdapterView<?> arg0) {  
+                  
+            }  
+        });        // 设置选中图片的监听事件（当图片滑到屏幕正中，则视为自动选中）  
+        gallery.setUnselectedAlpha(0.3f);                   // 设置未选中图片的透明度  
+        gallery.setSpacing(40); 
+		
+        gallery.setAdapter(imgAdapter);                     // 设置图片资源  
+        gallery.setGravity(Gravity.CENTER_HORIZONTAL);      // 设置水平居中显示  
+        gallery.setSelection(imgAdapter.imgs.length * 100);
+        
 		buttonBack = (Button)this.findViewById(R.id.choose_obj_button_back);
 		buttonSelect = (Button)this.findViewById(R.id.choose_obj_button_select);
-		objListView = (TextView)this.findViewById(R.id.choose_obj_objlist);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
 
@@ -98,38 +123,5 @@ public class ChooseObjActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-	}
-	
-	protected void onResume(){
-		super.onResume();
-		File sdCardDir = Environment.getExternalStorageDirectory();
-		File objDir = new File(sdCardDir, "BAIObj");
-        File[] list = objDir.listFiles();
-        StringBuilder sb = new StringBuilder();
-        this.listChildred(list, sb, "");
-        this.objListView.setText(sb.toString());
-	}
-	private void listChildred(File[] list, StringBuilder sb, String space) {
-		// TODO Auto-generated method stub
-		 if (list == null) {
-	            // 跳過空目錄
-	            Log.e(TAG, ">>>>>>>>>>>>>>>>");
-	            return;
-	        }
-	        for (File f : list) {
-	            String msg;
-	            if (f.isDirectory()) {
-	                msg = space + " + " + f.getName();
-	                sb.append(msg + "\n");
-	                Log.d(TAG, msg);
-	                // 往下一層
-	                this.listChildred(f.listFiles(), sb, space + "   ");
-	            }
-	            else {
-	                msg = space + " - " + f.getName();
-	                sb.append(msg + "\n");
-	                Log.d(TAG, msg);
-	            }
-	       }
 	}
 }
