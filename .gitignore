@@ -30,3 +30,4 @@ proguard/
 # LOG added
 .DS_store
 .metadata/
+project.properties
