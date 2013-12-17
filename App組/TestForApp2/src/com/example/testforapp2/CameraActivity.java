@@ -52,7 +52,7 @@ public class CameraActivity extends Activity {
 		//建立GLSurface的View
 		HeyRenderer heyRenderer=new HeyRenderer(glSurfaceView.getContext());
 		//新增Renderer給GLSurfaceView用
-		glSurfaceView.setZOrderOnTop(false);
+		glSurfaceView.setZOrderMediaOverlay(true);
 		//(不確定)將view擺在最上層
 		glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
