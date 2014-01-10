@@ -7,8 +7,6 @@ package com.example.testforapp2;
 
 
 
-import android.opengl.GLSurfaceView;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,11 +14,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.opengl.GLSurfaceView;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -48,7 +47,7 @@ public class CameraActivity extends Activity {
 		//LOG新增區塊->開發者看完後可刪除此註解
 		//===============start===============
 		
-		glSurfaceView=new GLSurfaceView(this);
+		glSurfaceView=(GLSurfaceView)findViewById(R.id.glSurfaceView);
 		//建立GLSurface的View
 		HeyRenderer heyRenderer=new HeyRenderer(glSurfaceView.getContext());
 		//新增Renderer給GLSurfaceView用
@@ -65,9 +64,6 @@ public class CameraActivity extends Activity {
 		//glSurface.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		//這裡是指重畫的模式，預設是不斷重畫，上面的設定是除非呼叫glSurfaceView.requestRender()不然不會重畫
 		//經測試使用後監聽會失效，但我覺得預設的模式要一直畫，也許有替代方案就留下來了
-		
-		addContentView(glSurfaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		//直接在APP上面用JAVA code新增一個View給glSurfaceView用，若利用XML新增不知道為何會跳錯
 		
 		//================end================
 		
