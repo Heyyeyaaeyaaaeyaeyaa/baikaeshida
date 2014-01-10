@@ -17,15 +17,32 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" >
-
     </FrameLayout>
-
+	
+	<android.opengl.GLSurfaceView 
+        android:id="@+id/glSurfaceView" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+    </android.opengl.GLSurfaceView>
+    
     <TextView
         android:id="@+id/camera_text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title"
         android:textColor="@drawable/white" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal" >
 
     <Button
         android:id="@+id/camera_button_capture"
@@ -44,5 +61,7 @@
         android:layout_alignLeft="@+id/camera_frameLayout"
         android:text="@string/button_back"
         android:textColor="@drawable/white" />
+
+    </LinearLayout>
 
 </RelativeLayout>
