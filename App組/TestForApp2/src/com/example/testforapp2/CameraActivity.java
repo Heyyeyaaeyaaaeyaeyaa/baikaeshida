@@ -7,6 +7,13 @@ package com.example.testforapp2;
 
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,8 +21,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -70,13 +80,15 @@ public class CameraActivity extends Activity {
 		buttonBack = (Button)this.findViewById(R.id.camera_button_back);
 		buttonCapture = (Button)this.findViewById(R.id.camera_button_capture);
 		frameLayout = (FrameLayout)this.findViewById(R.id.camera_frameLayout);
-		preview = new CameraPreview(this);
-
+		
 		dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm); //取得螢幕資訊
+		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, Toast.LENGTH_SHORT).show();
+		
+		preview = new CameraPreview(this, dm);
 		frameLayout.addView(preview);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -84,15 +96,42 @@ public class CameraActivity extends Activity {
 				intent.setClass(CameraActivity.this, ChooseObjActivity.class);
 				startActivity(intent);
 			}});
-		buttonCapture.setOnClickListener(new Button.OnClickListener(){
 
+		/*===============以下拍照按鈕*/
+		buttonCapture.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				/*拍照*/
-			}});
-		getWindowManager().getDefaultDisplay().getMetrics(dm); //取得螢幕資訊
-		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, Toast.LENGTH_SHORT).show();
+				//新增一個PictureCallback
+				PictureCallback picture = new PictureCallback() {
+				    @Override
+				    public void onPictureTaken(byte[] data, Camera camera) {
+				        File pictureFile = getOutputMediaFile(1); //MEDIA_TYPE_IMAGE = 1,  MEDIA_TYPE_VIDEO = 2
+				        if (pictureFile == null){
+				            Log.d("David", "Error creating media file");
+				            return;
+				        }
+
+				        try {
+				            FileOutputStream fos = new FileOutputStream(pictureFile);
+				            fos.write(data);
+				            fos.close();
+				        } catch (FileNotFoundException e) {
+				            Log.d("David", "File not found: " + e.getMessage());
+				        } catch (IOException e) {
+				            Log.d("David", "Error accessing file: " + e.getMessage());
+				        }
+				        camera.startPreview(); //拍完照以後刷新畫面 不加這行 會讓畫面一直停在拍照的那張圖
+				    }
+				};
+		        // get an image from the camera
+				//拍照 把PictureCallback丟進去
+				camera.takePicture(null, null, picture);	 
+		}});
+		/*===============以上拍照按鈕*/
+		
+		
+		
 	}
 
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
@@ -121,6 +160,48 @@ public class CameraActivity extends Activity {
 	    }
 	    return camera;
 	  }
+	//=====以下是儲存照片用
+	/** Create a file Uri for saving an image or video */
+	//這個目前沒用到
+	private Uri getOutputMediaFileUri(int type){
+	      return Uri.fromFile(getOutputMediaFile(type));
+	}
+
+	/** Create a File for saving an image or video */
+	private File getOutputMediaFile(int type){
+	    // To be safe, you should check that the SDCard is mounted
+	    // using Environment.getExternalStorageState() before doing this.
+		if(Environment.getExternalStorageState() == null) //查看外部儲存空間是否存在
+			Log.d("SDcard", "doesn't exist");
+	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory( //在手機Picture內建資料夾上 新建一個資料夾MyCameraApp
+	              Environment.DIRECTORY_PICTURES), "MyCameraApp");
+	    
+	    //System.out.println(mediaStorageDir.getPath());
+	    //但是不曉得為什麼他還是儲存在手機上 不是sd card上
+	    // 這是我在LogCat上追蹤到的儲存路徑 : storage/emulated/0/Pictures/MyCameraApp
+
+	    // This location works best if you want the created images to be shared
+	    // between applications and persist after your app has been uninstalled.
+
+	    // Create the storage directory if it does not exist
+	    if (! mediaStorageDir.exists()){
+	        if (! mediaStorageDir.mkdirs()){
+	            Log.d("MyCameraApp", "failed to create directory");
+	            return null;
+	        }
+	    }
+
+	    // Create a media file name
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());//取得日期時間
+	    
+	    File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+	        "AppCameraTest_IMG_"+ timeStamp + ".jpg");
+
+	    
+	    return mediaFile;
+	}
+	//=====以上是儲存照片用
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

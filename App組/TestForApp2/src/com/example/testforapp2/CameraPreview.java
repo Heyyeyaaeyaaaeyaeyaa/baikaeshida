@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -12,13 +13,15 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private SurfaceHolder holder;
 	private Camera camera;
 	private final String TAG = "Preview";
-	public CameraPreview(Context context) {
+	private DisplayMetrics dm;
+	public CameraPreview(Context context, DisplayMetrics dm) {
 		super(context);
 		// TODO Auto-generated constructor stub
 		//this.camera = camera;
 		this.holder = this.getHolder();
 		this.holder.addCallback(this);
 		this.holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		this.dm = dm;
 	}
 
 	@Override
@@ -44,7 +47,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// TODO Auto-generated catch block
 			Log.e(TAG, "IOException caused by setPreviewDisplay()", e);
 		}
-		camera.setDisplayOrientation(90);//畫面順時鐘旋轉90度
+		if(dm.heightPixels > dm.widthPixels)
+			camera.setDisplayOrientation(90);//畫面順時鐘旋轉90度
 		camera.startPreview();
 	}
 

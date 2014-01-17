@@ -17,6 +17,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         <activity
             android:name="com.example.testforapp2.MainActivity"
             android:label="@string/app_name" >
@@ -26,22 +27,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="com.example.testforapp2.CameraActivity"
-            android:label="@string/title_activity_camera" >
+            android:label="@string/title_activity_camera" 
+            android:configChanges="orientation">
         </activity>
+        
         <activity
             android:name="com.example.testforapp2.ObjSiteActivity"
             android:label="@string/title_activity_obj_site" >
         </activity>
+        
         <activity
             android:name="com.example.testforapp2.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
+        
         <activity
             android:name="com.example.testforapp2.ChooseObjActivity"
             android:label="@string/title_activity_choose_obj" >
         </activity>
+        
     </application>
 
 </manifest>
