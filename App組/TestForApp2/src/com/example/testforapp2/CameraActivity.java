@@ -11,25 +11,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -48,7 +40,6 @@ public class CameraActivity extends Activity {
 	private Camera camera;
 	private CameraPreview preview;
 	private Singleton singleton;
-	private HeyRenderer heyRenderer;
 	
 	private DisplayMetrics dm; //螢幕
 	private GLSurfaceView glSurfaceView;
@@ -68,7 +59,7 @@ public class CameraActivity extends Activity {
 		
 		glSurfaceView=(GLSurfaceView)findViewById(R.id.glSurfaceView);
 		//建立GLSurface的View
-		heyRenderer=new HeyRenderer(glSurfaceView.getContext(),glSurfaceView.getHeight(),glSurfaceView.getWidth());
+		HeyRenderer heyRenderer=new HeyRenderer(glSurfaceView.getContext());
 		//新增Renderer給GLSurfaceView用
 		glSurfaceView.setZOrderMediaOverlay(true);
 		//(不確定)將view擺在最上層
@@ -120,19 +111,11 @@ public class CameraActivity extends Activity {
 				            Log.d("David", "Error creating media file");
 				            return;
 				        }
-						
-				        try {
-				        	Bitmap glBitmap = heyRenderer.getBitmap();
-				        	Bitmap bmp=BitmapFactory.decodeByteArray(data, 0, data.length);
-				        	Matrix mtx = new Matrix();
-				        	mtx.postRotate(270);
-				        	glBitmap = Bitmap.createBitmap(glBitmap, 0, 0, 1080, 1920, mtx, true);
-				        	bmp = combineImages(bmp, glBitmap);
-				            FileOutputStream fos = new FileOutputStream(pictureFile);
-				            bmp.compress(CompressFormat.PNG, 100, fos);
-				            fos.flush();
-				            fos.close();
 
+				        try {
+				            FileOutputStream fos = new FileOutputStream(pictureFile);
+				            fos.write(data);
+				            fos.close();
 				        } catch (FileNotFoundException e) {
 				            Log.d("David", "File not found: " + e.getMessage());
 				        } catch (IOException e) {
@@ -168,7 +151,7 @@ public class CameraActivity extends Activity {
 	}
 	
 	private Camera getCameraInstance() {
-		String TAG = "Log";
+		String TAG = "camera99";
     	Camera camera = null;
 	    try {
 	        camera = Camera.open();
@@ -252,50 +235,6 @@ public class CameraActivity extends Activity {
 	protected void onResume(){
 		super.onResume();
 		camera = getCameraInstance();
-		setPictureSize(camera,1080);
         preview.setCamera(camera);
-        Camera.Size cs = camera.getParameters().getPictureSize();
-        Log.e("Log",cs.height+""+cs.width);
-	}
-	public Bitmap combineImages(Bitmap c, Bitmap s) {
-
-		Bitmap cs = null; 
-		 
-	    int width, height = 0; 
-	     
-	    if(c.getWidth() > s.getWidth()) { 
-	      width = c.getWidth(); 
-	      height = c.getHeight();
-	    } else { 
-	      width = c.getWidth(); 
-	      height = c.getHeight();
-	    } 
-	 
-	    cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888); 
-	 
-	    Canvas comboImage = new Canvas(cs); 
-	 
-	    comboImage.drawBitmap(c, 0f, 0f, null); 
-	    comboImage.drawBitmap(s, 0f, 0f, null); 
-        return cs;
-    }
-	public void setPictureSize(Camera cam, int maxWidth) {
-	    //端末がサポートするサイズ一覧取得
-	    Camera.Parameters params = cam.getParameters();
-	    List<Size> sizes = params.getSupportedPictureSizes();
-	    if ( sizes != null && sizes.size() > 0) {
-	        //撮影サイズを設定する
-	    	double targetRatio = (double)4 / 3;
-	        Size setSize = sizes.get(0);
-	        for(Size size : sizes){
-	        	double ratio = (double) size.width / size.height;
-	            if(Math.min(size.width, size.height) <= maxWidth && Math.abs(ratio - targetRatio) < 0.1) {
-	                setSize = size;
-	                break;
-	            }
-	        }
-	        params.setPictureSize(setSize.width, setSize.height);
-	        cam.setParameters(params);
-	    }
 	}
 }
