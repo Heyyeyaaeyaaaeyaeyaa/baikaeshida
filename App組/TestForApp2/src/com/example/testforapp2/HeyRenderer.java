@@ -3,6 +3,7 @@ package com.example.testforapp2;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -11,9 +12,12 @@ import com.test.obj.ObjData;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.opengl.GLException;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -35,6 +39,9 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private float ymove;
 	private float zmove;
 	private int lock = 0;
+	private int height;
+	private int width;
+	private Bitmap bitmap;
 	
 	/* 
 	 * The initial light values for ambient and diffuse
@@ -54,10 +61,11 @@ public class HeyRenderer implements Renderer, OnTouchListener
     private float oldY;
     float oldDist=0,newDist=0;
 	private final float TOUCH_SCALE = 0.2f;			//Proved to be good for normal rotation
-	public HeyRenderer(Context context)
+	public HeyRenderer(Context context, int height, int width)
 	{
 		this.context=context;
-		
+		this.height = 1920;
+		this.width = 1080;
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(lightAmbient.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		lightAmbientBuffer = byteBuf.asFloatBuffer();
@@ -85,6 +93,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 			ObjData objData=loadObjData.getObjData();
 			shapes[i]=new Shape(objData.getVertices(),objData.getTextures(),objData.getNormals(),objData.getIndices());
 		}
+		
 	}
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
@@ -124,6 +133,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		for(int i=0;i<shapeCount;i++){
 			shapes[i].draw(gl);
 		}
+		bitmap = createBitmapFromGLSurface(0,0,width,height,gl);
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height)
@@ -197,7 +207,35 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private float spacing(MotionEvent event) { 
 		float x = event.getX(0) - event.getX(1); 
 		float y = event.getY(0) - event.getY(1); 
-		return FloatMath.sqrt(x * x + y * y); 
+		return (float) Math.sqrt(x * x + y * y); 
 	}
-	
+	public Bitmap getBitmap(){
+		return bitmap;
+	}
+	private Bitmap createBitmapFromGLSurface(int x, int y, int w, int h, GL10 gl) throws OutOfMemoryError {
+	    int bitmapBuffer[] = new int[w * h];
+	    int bitmapSource[] = new int[w * h];
+	    IntBuffer intBuffer = IntBuffer.wrap(bitmapBuffer);
+	    intBuffer.position(0);
+
+	    try {
+	        gl.glReadPixels(x, y, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer);
+	        int offset1, offset2;
+	        for (int i = 0; i < h; i++) {
+	            offset1 = i * w;
+	            offset2 = (h - i - 1) * w;
+	            for (int j = 0; j < w; j++) {
+	                int texturePixel = bitmapBuffer[offset1 + j];
+	                int blue = (texturePixel >> 16) & 0xff;
+	                int red = (texturePixel << 16) & 0x00ff0000;
+	                int pixel = (texturePixel & 0xff00ff00) | red | blue;
+	                bitmapSource[offset2 + j] = pixel;
+	            }
+	        }
+	    } catch (GLException e) {
+	        return null;
+	    }
+	    
+	    return Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
+	}
 }
