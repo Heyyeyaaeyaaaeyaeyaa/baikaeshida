@@ -64,8 +64,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	public HeyRenderer(Context context, int height, int width)
 	{
 		this.context=context;
-		this.height = 1920;
-		this.width = 1080;
+		this.height = height;
+		this.width = width;
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(lightAmbient.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());
 		lightAmbientBuffer = byteBuf.asFloatBuffer();
