@@ -5,9 +5,10 @@ public class Singleton {
     private static Singleton _sharedInstance = null;
     
     /*****Variable************/
-    
+    String site;
 	/*************************/
-    private Singleton(){//¨p¦³ ¤£µ¹¥L¤H«Å§i
+    
+    private Singleton(){//ç§æœ‰ ä¸çµ¦ä»–äººå®£å‘Š
         super();
     }
     public static Singleton getSharedInstance(){
@@ -16,10 +17,14 @@ public class Singleton {
         }
         return _sharedInstance;
     }
-
     
     /*****Getting and Setting*****/
-    
+	public String getSite() {
+		return site;
+	}
+	public void setSite(String site) {
+		this.site = site;
+	}
 	/*****************************/
     
     

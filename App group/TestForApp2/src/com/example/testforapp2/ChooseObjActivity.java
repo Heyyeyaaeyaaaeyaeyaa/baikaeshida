@@ -35,25 +35,27 @@ public class ChooseObjActivity extends Activity {
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {  
             @Override  
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  
-                Toast.makeText(ChooseObjActivity.this, "点击图片 " + (position + 1), 100).show();  
+                Toast.makeText(ChooseObjActivity.this, "點擊圖片 " + (position + 1), 100).show();  
             }  
-        });          // 设置点击图片的监听事件（需要用手点击才触发，滑动时不触发）  
+        });          
+        // 設置點擊圖片的監聽事件（需要用手點擊才觸發，滑動時不觸發）  
         gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  
             @Override  
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {  
-                Toast.makeText(ChooseObjActivity.this, "选中图片 " + (position + 1), 20).show();  
+                Toast.makeText(ChooseObjActivity.this, "選中圖片 " + (position + 1), 20).show();  
             }  
       
             @Override  
             public void onNothingSelected(AdapterView<?> arg0) {  
                   
             }  
-        });        // 设置选中图片的监听事件（当图片滑到屏幕正中，则视为自动选中）  
-        gallery.setUnselectedAlpha(0.3f);                   // 设置未选中图片的透明度  
+        });        
+        // 設置選中圖片的監聽事件（當圖片滑到螢幕正中，則視為自動選中）  
+        gallery.setUnselectedAlpha(0.3f);                   // 設置未選中圖片的透明度  
         gallery.setSpacing(40); 
 		
-        gallery.setAdapter(imgAdapter);                     // 设置图片资源  
-        gallery.setGravity(Gravity.CENTER_HORIZONTAL);      // 设置水平居中显示  
+        gallery.setAdapter(imgAdapter);                     // 設置圖片資源  
+        gallery.setGravity(Gravity.CENTER_HORIZONTAL);      // 設置水平置中顯示  
         gallery.setSelection(imgAdapter.imgs.length * 100);
         
 		buttonBack = (Button)this.findViewById(R.id.choose_obj_button_back);
@@ -74,7 +76,7 @@ public class ChooseObjActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				/*選擇好要使用的家具OBJ，要把他告訴給嚇一個CameraActivity知道*/
+				/*選擇好要使用的家具OBJ，要把他告訴給下一個CameraActivity知道*/
 				
 				Intent intent = new Intent();
 				intent.setClass(ChooseObjActivity.this, CameraActivity.class);

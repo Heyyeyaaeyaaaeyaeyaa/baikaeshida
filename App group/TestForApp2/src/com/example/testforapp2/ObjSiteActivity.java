@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class ObjSiteActivity extends Activity {
 	private EditText TextInputObjSite;
 	private Button buttonBack, buttonApply;
-	private Singleton singleton;
+	private Singleton singleton = Singleton.getSharedInstance();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class ObjSiteActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String site = TextInputObjSite.getText().toString();
+				singleton.setSite(TextInputObjSite.getText().toString());
 				/*把輸入的site丟進singleton裡面*/
 			}});
 	}
