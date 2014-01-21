@@ -1,7 +1,12 @@
 package com.example.testforapp2;
 
+import java.io.File;
+import java.io.FilenameFilter;
+
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,7 +27,6 @@ public class ImageAdapter extends BaseAdapter {
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return Integer.MAX_VALUE;
-		//return imgs.length;
 	}
 
 	@Override
@@ -40,11 +44,34 @@ public class ImageAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView imageview = new ImageView(mContext);  
-		imageview.setImageResource(imgs[position % imgs.length]);
+		//imageview.setImageResource(imgs[position % imgs.length]);
+		imageview.setImageURI(getImage()[position % mUrls.length]);
         imageview.setLayoutParams(new Gallery.LayoutParams(300, 300));
         imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageview.setBackgroundColor(Color.alpha(1));
         return imageview;
+	}
+	
+	Uri[] mUrls;
+	String[] mFiles = null;
+	
+	public Uri[] getImage(){
+		File images = Environment.getExternalStorageDirectory();
+		File[] imagelist = images.listFiles(new FilenameFilter(){
+			public boolean accept(File dir , String name){
+				return(name.endsWith(".jpg")||name.endsWith(".png"));
+			}
+		});
+		
+		mFiles = new String[imagelist.length];
+		for(int i=0;i<imagelist.length;i++)
+			mFiles[i] = imagelist[i].getAbsolutePath();
+		
+		mUrls = new Uri[mFiles.length];
+		for(int i=0;i<mFiles.length;i++)
+			mUrls[i] = Uri.parse(mFiles[i]);
+		
+		return mUrls;
 	}
 
 }

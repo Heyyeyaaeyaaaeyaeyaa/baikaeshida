@@ -40,12 +40,23 @@
         android:id="@+id/obj_site_editText_input_site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/obj_site_text_title"
+        android:layout_alignRight="@+id/source_button"
         android:layout_below="@+id/obj_site_text_title"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="29dp"
         android:ems="10"
         android:text="@string/text_default_obj_site"
-        android:textColor="@drawable/white" />
+        android:textColor="@drawable/white" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/source_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/obj_site_button_apply"
+        android:layout_below="@+id/obj_site_editText_input_site"
+        android:text="Source..." />
 
 </RelativeLayout>

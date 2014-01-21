@@ -1,6 +1,10 @@
 package com.example.testforapp2;
 
+import java.io.File;
+
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +18,7 @@ import android.widget.Toast;
 
 public class ObjSiteActivity extends Activity {
 	private EditText TextInputObjSite;
-	private Button buttonBack, buttonApply;
+	private Button buttonBack, buttonApply,buttonSource;
 	private Singleton singleton = Singleton.getSharedInstance();
 	
 	@Override
@@ -29,6 +33,7 @@ public class ObjSiteActivity extends Activity {
 		TextInputObjSite = (EditText)this.findViewById(R.id.obj_site_editText_input_site);
 		buttonBack = (Button)this.findViewById(R.id.obj_site_button_back);
 		buttonApply = (Button)this.findViewById(R.id.obj_site_button_apply);
+		buttonSource = (Button)this.findViewById(R.id.source_button);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
 
@@ -39,16 +44,43 @@ public class ObjSiteActivity extends Activity {
 				intent.setClass(ObjSiteActivity.this, MainActivity.class);
 				startActivity(intent);
 			}});
+		
 		buttonApply.setOnClickListener(new Button.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				singleton.setSite(TextInputObjSite.getText().toString());
 				/*把輸入的site丟進singleton裡面*/
 			}});
+		
+		buttonSource.setOnClickListener(new Button.OnClickListener(){
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+			    intent.setType("file/*");
+			    startActivityForResult(intent,0);
+			}});
 	}
 
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        // 有選擇檔案
+        if ( resultCode == RESULT_OK )
+        {
+            // 取得檔案的 Uri
+            Uri uri = data.getData();
+            if( uri != null )
+            {
+                // 利用 Uri 顯示 ImageView 圖片
+            	TextInputObjSite.setText( uri.getPath() );
+            }
+        }
+    }
+	
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
         @Override  
         public void onReceive(Context context, Intent intent) {  
