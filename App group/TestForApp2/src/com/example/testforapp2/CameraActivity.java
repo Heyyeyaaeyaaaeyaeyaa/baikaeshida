@@ -70,6 +70,10 @@ public class CameraActivity extends Activity {
 	private int foot;
 	private float magnification;
 	private int rotation;
+	private final int ROTATION_VERTICAL = 0;
+	private final int ROTATION_LEFT_HORIZONTAL = 1;
+	private final int ROTATION_RIGHT_HORIZONTAL = 2;
+	private final int ROTATION_UPSIDE_DOWN = 3;
 
 	private SensorEventListener listener;
 	private SensorManager sensorMgr;
@@ -130,17 +134,21 @@ public class CameraActivity extends Activity {
 			public void onSensorChanged(SensorEvent event) {
 				Sensor sensor = event.sensor;
 				float[] values = event.values;
-				if(values[1] > 9 && rotation != 0){ //直立
-					rotation = 0;
+				if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直立
+					rotation = ROTATION_VERTICAL;
 					Toast.makeText(getApplicationContext(), "直立", Toast.LENGTH_SHORT).show();
 				}
-				else if(values[0] > 9 && rotation != 1){
-					rotation = 1;
+				else if(values[0] > 9 && rotation != ROTATION_LEFT_HORIZONTAL){
+					rotation = ROTATION_LEFT_HORIZONTAL;
 					Toast.makeText(getApplicationContext(), "左旋轉 橫立", Toast.LENGTH_SHORT).show();
 				}
-				else if(values[0] < -9 && rotation != 2){
-					rotation = 2;
+				else if(values[0] < -9 && rotation != ROTATION_RIGHT_HORIZONTAL){
+					rotation = ROTATION_RIGHT_HORIZONTAL;
 					Toast.makeText(getApplicationContext(), "右旋轉 橫立", Toast.LENGTH_SHORT).show();
+				}
+				else if(values[1] < -9 && rotation != ROTATION_UPSIDE_DOWN){
+					rotation = ROTATION_UPSIDE_DOWN;
+					Toast.makeText(getApplicationContext(), "倒立", Toast.LENGTH_SHORT).show();
 				}
 				
 			}
@@ -150,17 +158,6 @@ public class CameraActivity extends Activity {
 		
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	private void initGlSurfaceView()
 	{
 		glSurfaceView=(GLSurfaceView)findViewById(R.id.glSurfaceView);
@@ -214,9 +211,11 @@ public class CameraActivity extends Activity {
 			        @Override
 			        public void onClick(DialogInterface dialog, int which) {                               
 			        	EditText editText = (EditText) (v.findViewById(R.id.camera_setting_foot_input));
-			        	foot = Integer.parseInt(editText.getText().toString());
-			        	Toast.makeText(getApplicationContext(), "foot="+foot, Toast.LENGTH_SHORT).show();
-			        	
+			        	if(!editText.getText().toString().equals(""))
+			        	{
+			        		foot = Integer.parseInt(editText.getText().toString());
+			        		Toast.makeText(getApplicationContext(), "foot="+foot, Toast.LENGTH_SHORT).show();
+			        	}
 			        }
 			    })
 			    .show();
@@ -310,6 +309,21 @@ public class CameraActivity extends Activity {
 					glBitmap = Bitmap.createBitmap(glBitmap, 0, 0, glBitmap.getWidth(), glBitmap.getHeight(), mtx, true);
 					bmp = combineImages(bmp, glBitmap);
 					FileOutputStream fos = new FileOutputStream(pictureFile);
+					switch(rotation){
+						case ROTATION_VERTICAL:
+							mtx.postRotate(180);
+							break;
+						case ROTATION_LEFT_HORIZONTAL:
+							mtx.postRotate(90);
+							break;
+						case ROTATION_RIGHT_HORIZONTAL:
+							mtx.postRotate(270);
+							break;
+						case ROTATION_UPSIDE_DOWN:
+							mtx.postRotate(0);
+							break;
+					}
+					bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mtx, true);
 					bmp.compress(CompressFormat.PNG, 100, fos);
 					fos.flush();
 					fos.close();
