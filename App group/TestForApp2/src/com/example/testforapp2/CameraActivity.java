@@ -11,9 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -23,6 +26,10 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
 import android.hardware.SensorManager;
@@ -32,9 +39,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -42,6 +52,7 @@ import android.widget.Toast;
 public class CameraActivity extends Activity {
 	private Button buttonBack;
 	private Button buttonCapture;
+	private Button buttonFocus;
 	private FrameLayout frameLayout;
 	private BroadcastReceiver mBoradcastReceiver;
 	private Camera camera;
@@ -55,6 +66,13 @@ public class CameraActivity extends Activity {
 	private int defaultPictureHeight = 960;
 	private String LOGTAG = "Log";
 	private String DAVIDTAG = "David";
+	private float focalLength;
+	private int foot;
+	private float magnification;
+	private int rotation;
+
+	private SensorEventListener listener;
+	private SensorManager sensorMgr;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +84,7 @@ public class CameraActivity extends Activity {
 	
 		buttonBack = (Button)this.findViewById(R.id.camera_button_back);
 		buttonCapture = (Button)this.findViewById(R.id.camera_button_capture);
+		buttonFocus = (Button)this.findViewById(R.id.camera_button_focus);
 		frameLayout = (FrameLayout)this.findViewById(R.id.camera_frameLayout);
 		
 		dm = new DisplayMetrics();
@@ -75,65 +94,73 @@ public class CameraActivity extends Activity {
 		preview = new CameraPreview(this, dm);
 		preview.setLayoutParams(new RelativeLayout.LayoutParams(defaultPictureHeight, defaultPictureWidth));
 		frameLayout.addView(preview);
+		sensorMgr = (SensorManager)getSystemService(SENSOR_SERVICE);
+		focalLength = 0;
+		foot = 0;
+		rotation = 0;
 		
-		buttonBack.setOnClickListener(
-				new Button.OnClickListener()
-				{
-					@Override
-					public void onClick(View v) 
-					{
-						Intent intent = new Intent();
-						intent.setClass(CameraActivity.this, ChooseObjActivity.class);
-						startActivity(intent);
-					}
+		buttonBack.setOnClickListener(new Button.OnClickListener(){
+			@Override
+			public void onClick(View v) 
+			{
+				Intent intent = new Intent();
+				intent.setClass(CameraActivity.this, ChooseObjActivity.class);
+				startActivity(intent);
+			}
+		});
+		buttonCapture.setOnClickListener(new Button.OnClickListener(){
+			@Override
+			public void onClick(View v)
+			{
+				tackPicture();
+			}
+		});
+		buttonFocus.setOnClickListener(new Button.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				autoFocus();
+			}
+		});
+		
+		listener = new SensorEventListener() { 
+			@Override
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			}
+			@Override
+			public void onSensorChanged(SensorEvent event) {
+				Sensor sensor = event.sensor;
+				float[] values = event.values;
+				if(values[1] > 9 && rotation != 0){ //直立
+					rotation = 0;
+					Toast.makeText(getApplicationContext(), "直立", Toast.LENGTH_SHORT).show();
 				}
-		);
-		buttonCapture.setOnClickListener(
-				new Button.OnClickListener()
-				{
-					@Override
-					public void onClick(View v)
-					{
-						PictureCallback picture = new PictureCallback() 
-						{
-							@Override
-							public void onPictureTaken(byte[] data, Camera camera) 
-							{
-								File pictureFile = getOutputMediaFile(1);
-								if (pictureFile == null)
-								{
-									Log.d(DAVIDTAG, "Error creating media file");
-									return;
-								}		
-								try 
-								{
-									Bitmap glBitmap = heyRenderer.getBitmap();
-									Bitmap bmp=BitmapFactory.decodeByteArray(data, 0, data.length);
-									Matrix mtx = new Matrix();
-									mtx.postRotate(270);
-									glBitmap = Bitmap.createBitmap(glBitmap, 0, 0, glBitmap.getWidth(), glBitmap.getHeight(), mtx, true);
-									bmp = combineImages(bmp, glBitmap);
-									FileOutputStream fos = new FileOutputStream(pictureFile);
-									bmp.compress(CompressFormat.PNG, 100, fos);
-									fos.flush();
-									fos.close();
-								} 
-								catch (FileNotFoundException e)
-								{
-									Log.d(DAVIDTAG, "File not found: " + e.getMessage());
-								} 
-								catch (IOException e) 
-								{
-									Log.d(DAVIDTAG, "Error accessing file: " + e.getMessage());
-								}
-								camera.startPreview();
-							}
-						};
-						camera.takePicture(null, null, picture);	 
-					}
+				else if(values[0] > 9 && rotation != 1){
+					rotation = 1;
+					Toast.makeText(getApplicationContext(), "左旋轉 橫立", Toast.LENGTH_SHORT).show();
 				}
-		);
+				else if(values[0] < -9 && rotation != 2){
+					rotation = 2;
+					Toast.makeText(getApplicationContext(), "右旋轉 橫立", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		};	
+		
+		
+		
+		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private void initGlSurfaceView()
 	{
 		glSurfaceView=(GLSurfaceView)findViewById(R.id.glSurfaceView);
@@ -162,8 +189,51 @@ public class CameraActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.camera, menu);
+		menu.add(0, 0, 0, "Object Distance");
+		menu.add(0, 1, 1, "Option 1");
+		menu.add(0, 2, 2, "Option 2");
+		menu.add(0, 3, 3, "Option 3");
 		return true;
 	}
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item) {
+	  // TODO Auto-generated method stub
+	  switch(item.getItemId()){
+	  case (0):
+		  item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				// TODO Auto-generated method stub
+				EditText input = (EditText)findViewById(R.id.camera_setting_foot_input);
+				LayoutInflater inflater = LayoutInflater.from(CameraActivity.this);
+				final View v = inflater.inflate(R.layout.camera_setting_foot, null);
+				new AlertDialog.Builder(CameraActivity.this)
+			    .setTitle("請輸入多少步的距離")
+			    .setView(v)
+			    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+			        @Override
+			        public void onClick(DialogInterface dialog, int which) {                               
+			        	EditText editText = (EditText) (v.findViewById(R.id.camera_setting_foot_input));
+			        	foot = Integer.parseInt(editText.getText().toString());
+			        	Toast.makeText(getApplicationContext(), "foot="+foot, Toast.LENGTH_SHORT).show();
+			        	
+			        }
+			    })
+			    .show();
+				return false;
+			}
+		  });
+	   break;
+	  case (1):
+	   break;
+	  case (2):
+	   break;
+	  case (3):
+	   break;
+	  }
+	  return true;
+	 }
+	 
 	private Camera getCameraInstance() {
     	Camera camera = null;
 	    try {
@@ -173,11 +243,13 @@ public class CameraActivity extends Activity {
 	    }
 	    return camera;
 	  }
+	
 	/** Create a file Uri for saving an image or video */
 	@SuppressWarnings("unused")
 	private Uri getOutputMediaFileUri(int type){
 	      return Uri.fromFile(getOutputMediaFile(type));
 	}
+	
 	/** Create a File for saving an image or video */
 	private File getOutputMediaFile(int type){
 		if(Environment.getExternalStorageState() == null) 
@@ -195,6 +267,67 @@ public class CameraActivity extends Activity {
 	        "AppCameraTest_IMG_"+ timeStamp + ".jpg");    
 	    return mediaFile;
 	}
+	
+	private void autoFocus(){
+		Camera.Parameters parameters = camera.getParameters();
+		parameters.setFocusMode(parameters.FOCUS_MODE_AUTO);
+		camera.setParameters(parameters);
+		AutoFocusCallback autoFacusCallback = new AutoFocusCallback()
+		{
+		    @Override
+		    public void onAutoFocus(boolean success, Camera camera)
+		    {
+		        Log.i("onAutoFocus", "onAutoFocus:" + success);
+		        focalLength = camera.getParameters().getFocalLength();
+		        Toast.makeText(getApplicationContext(), "focalLength="+focalLength, Toast.LENGTH_SHORT).show();
+		        
+		        ChangeObjSize cos = new ChangeObjSize(focalLength, foot);
+				magnification = cos.getMagnification();
+				Toast.makeText(getApplicationContext(), "magnification="+magnification, Toast.LENGTH_SHORT).show();
+		    }
+		};
+		camera.autoFocus(autoFacusCallback);
+	}
+	
+	private void tackPicture(){
+		final PictureCallback picture = new PictureCallback() 
+		{
+			@Override
+			public void onPictureTaken(byte[] data, Camera camera) 
+			{
+				File pictureFile = getOutputMediaFile(1);
+				if (pictureFile == null)
+				{
+					Log.d(DAVIDTAG, "Error creating media file");
+					return;
+				}		
+				try 
+				{
+					Bitmap glBitmap = heyRenderer.getBitmap();
+					Bitmap bmp=BitmapFactory.decodeByteArray(data, 0, data.length);
+					Matrix mtx = new Matrix();
+					mtx.postRotate(270);
+					glBitmap = Bitmap.createBitmap(glBitmap, 0, 0, glBitmap.getWidth(), glBitmap.getHeight(), mtx, true);
+					bmp = combineImages(bmp, glBitmap);
+					FileOutputStream fos = new FileOutputStream(pictureFile);
+					bmp.compress(CompressFormat.PNG, 100, fos);
+					fos.flush();
+					fos.close();
+				} 
+				catch (FileNotFoundException e)
+				{
+					Log.d(DAVIDTAG, "File not found: " + e.getMessage());
+				} 
+				catch (IOException e) 
+				{
+					Log.d(DAVIDTAG, "Error accessing file: " + e.getMessage());
+				}
+				camera.startPreview();
+			}
+		};
+		        camera.takePicture(null, null, picture);
+	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -209,6 +342,8 @@ public class CameraActivity extends Activity {
             camera.release();
             camera = null;
         }
+        
+		 sensorMgr.unregisterListener(listener); 
 	}
 	@Override
 	protected void onStart() {
@@ -223,6 +358,8 @@ public class CameraActivity extends Activity {
 		camera = getCameraInstance();
 		findAndSetPictureSupportSize(camera,defaultPictureExpectedSize);
         preview.setCamera(camera);
+
+		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI); 
 	}
 	/**combine photo and image to a bitmap */
 	public Bitmap combineImages(Bitmap cameraBitmap, Bitmap glImageBitmap) 

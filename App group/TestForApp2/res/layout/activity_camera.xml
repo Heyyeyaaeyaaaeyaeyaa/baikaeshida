@@ -59,6 +59,13 @@
         android:text="@string/button_back"
         android:textColor="@drawable/white" />
 
+    <Button
+        android:id="@+id/camera_button_focus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_focus"
+        android:textColor="@drawable/white" />
+
     </LinearLayout>
 
 </RelativeLayout>

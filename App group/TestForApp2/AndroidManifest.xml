@@ -30,8 +30,8 @@
         
         <activity
             android:name="com.example.testforapp2.CameraActivity"
-            android:label="@string/title_activity_camera" 
-            android:configChanges="orientation">
+            android:label="@string/title_activity_camera"
+            android:screenOrientation="portrait"  >
         </activity>
         
         <activity
