@@ -38,6 +38,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private float xmove;
 	private float ymove;
 	private float zmove;
+	private float currentSize;
 	private int lock = 0;
 	private int height;
 	private int width;
@@ -97,6 +98,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	}
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
+		initSize();
 		//And there'll be light!
 		//Setup The Ambient Light ( NEW )
 		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, lightAmbientBuffer);		
@@ -125,7 +127,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
-		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, -7.0f);	//Move down 1.0 Unit And Into The Screen 7.0
+		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, currentSize);	//Move down 1.0 Unit And Into The Screen 7.0
 		gl.glScalef(0.02f-zmove, 0.02f-zmove, 0.02f-zmove);
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
@@ -237,5 +239,16 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	    }
 	    
 	    return Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
+	}
+	public void changeObjSize(double magnification){
+		if(magnification==0)
+			initSize();
+		else{
+			currentSize *=magnification;
+			currentSize = Math.max(currentSize, -100.0f);
+		}
+	}
+	public void initSize(){
+		currentSize = -10.0f;
 	}
 }

@@ -68,13 +68,14 @@ public class CameraActivity extends Activity {
 	private String DAVIDTAG = "David";
 	private float focalLength;
 	private int foot;
-	private float magnification;
+	private double magnification;
 	private int rotation;
 	private final int ROTATION_VERTICAL = 0;
 	private final int ROTATION_LEFT_HORIZONTAL = 1;
 	private final int ROTATION_RIGHT_HORIZONTAL = 2;
 	private final int ROTATION_UPSIDE_DOWN = 3;
-
+	private final int TYPE_DISTANCE_OPTION = 0;
+	private ObjSizeManager osm;
 	private SensorEventListener listener;
 	private SensorManager sensorMgr;
 	
@@ -100,7 +101,7 @@ public class CameraActivity extends Activity {
 		frameLayout.addView(preview);
 		sensorMgr = (SensorManager)getSystemService(SENSOR_SERVICE);
 		focalLength = 0;
-		foot = 0;
+		foot = 1;
 		rotation = 0;
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
@@ -168,6 +169,7 @@ public class CameraActivity extends Activity {
 		glSurfaceView.setRenderer(heyRenderer);
 		glSurfaceView.setOnTouchListener(heyRenderer);
 		glSurfaceView.setLayoutParams(new RelativeLayout.LayoutParams(defaultPictureHeight, defaultPictureWidth));
+        osm = new ObjSizeManager(heyRenderer,focalLength, foot);
 	}
  	private void initBroadcast()
 	{
@@ -195,33 +197,35 @@ public class CameraActivity extends Activity {
 	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item) {
 	  // TODO Auto-generated method stub
+
 	  switch(item.getItemId()){
-	  case (0):
-		  item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				// TODO Auto-generated method stub
-				EditText input = (EditText)findViewById(R.id.camera_setting_foot_input);
-				LayoutInflater inflater = LayoutInflater.from(CameraActivity.this);
-				final View v = inflater.inflate(R.layout.camera_setting_foot, null);
-				new AlertDialog.Builder(CameraActivity.this)
-			    .setTitle("請輸入多少步的距離")
-			    .setView(v)
-			    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-			        @Override
-			        public void onClick(DialogInterface dialog, int which) {                               
-			        	EditText editText = (EditText) (v.findViewById(R.id.camera_setting_foot_input));
-			        	if(!editText.getText().toString().equals(""))
-			        	{
-			        		foot = Integer.parseInt(editText.getText().toString());
-			        		Toast.makeText(getApplicationContext(), "foot="+foot, Toast.LENGTH_SHORT).show();
-			        	}
-			        }
-			    })
-			    .show();
-				return false;
-			}
-		  });
+	  case TYPE_DISTANCE_OPTION:
+		  	LayoutInflater inflater = LayoutInflater.from(CameraActivity.this);
+			final View v = inflater.inflate(R.layout.camera_setting_foot, null);
+			new AlertDialog.Builder(CameraActivity.this)
+		    .setTitle("請輸入多少步的距離")
+		    .setView(v)
+		    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+		        @Override
+		        public void onClick(DialogInterface dialog, int which) {                               
+		        	EditText editText = (EditText) (v.findViewById(R.id.camera_setting_foot_input));
+		        	if(!editText.getText().toString().equals(""))
+		        	{
+		        		osm.initSize();
+		        		foot = Integer.parseInt(editText.getText().toString());
+		        		Toast.makeText(getApplicationContext(), "foot="+foot, Toast.LENGTH_SHORT).show();
+		        		
+				        focalLength = camera.getParameters().getFocalLength();
+				        Toast.makeText(getApplicationContext(), "focalLength="+focalLength, Toast.LENGTH_SHORT).show();
+				        osm.setFoot(foot);
+				        osm.setFocalLength(focalLength);
+						magnification = osm.getMagnification();
+						Toast.makeText(getApplicationContext(), "magnification="+magnification, Toast.LENGTH_SHORT).show();
+						osm.changeObjSize(magnification);
+		        	}
+		        }
+		    })
+		    .show();
 	   break;
 	  case (1):
 	   break;
@@ -277,12 +281,6 @@ public class CameraActivity extends Activity {
 		    public void onAutoFocus(boolean success, Camera camera)
 		    {
 		        Log.i("onAutoFocus", "onAutoFocus:" + success);
-		        focalLength = camera.getParameters().getFocalLength();
-		        Toast.makeText(getApplicationContext(), "focalLength="+focalLength, Toast.LENGTH_SHORT).show();
-		        
-		        ChangeObjSize cos = new ChangeObjSize(focalLength, foot);
-				magnification = cos.getMagnification();
-				Toast.makeText(getApplicationContext(), "magnification="+magnification, Toast.LENGTH_SHORT).show();
 		    }
 		};
 		camera.autoFocus(autoFacusCallback);
