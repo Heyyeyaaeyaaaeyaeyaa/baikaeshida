@@ -41,7 +41,6 @@ public class ImageAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView imageview = new ImageView(mContext);  
 		//imageview.setImageResource(imgs[position % imgs.length]);

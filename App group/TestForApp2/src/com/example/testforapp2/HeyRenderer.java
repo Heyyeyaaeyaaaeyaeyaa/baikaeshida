@@ -62,6 +62,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
     private float oldY;
     float oldDist=0,newDist=0;
 	private final float TOUCH_SCALE = 0.2f;			//Proved to be good for normal rotation
+	private boolean requestFlag = false;
+	private boolean responseFlag = false;
 	public HeyRenderer(Context context, int height, int width)
 	{
 		this.context=context;
@@ -132,10 +134,16 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
+
 		for(int i=0;i<shapeCount;i++){
 			shapes[i].draw(gl);
 		}
-		bitmap = createBitmapFromGLSurface(0,0,width,height,gl);
+		if(requestFlag)
+		{
+			bitmap = createBitmapFromGLSurface(0,0,width,height,gl);
+			requestFlag = false;
+			responseFlag = true;
+		}
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height)
@@ -214,6 +222,16 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	public Bitmap getBitmap(){
 		return bitmap;
 	}
+	public void snedBitmapResquest(){
+		bitmap = null;
+		requestFlag = true;
+	}
+	public boolean getResponseFlag(){
+		return responseFlag;
+	}
+	public void setResponseFlag(boolean responseFlag){
+		this.responseFlag = responseFlag;
+	}
 	private Bitmap createBitmapFromGLSurface(int x, int y, int w, int h, GL10 gl) throws OutOfMemoryError {
 	    int bitmapBuffer[] = new int[w * h];
 	    int bitmapSource[] = new int[w * h];
@@ -221,6 +239,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	    intBuffer.position(0);
 
 	    try {
+	    	//gl.glPixelStorei(GL10.GL_UNPACK_ALIGNMENT, 1);
 	        gl.glReadPixels(x, y, w, h, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer);
 	        int offset1, offset2;
 	        for (int i = 0; i < h; i++) {
@@ -241,8 +260,10 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	    return Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
 	}
 	public void changeObjSize(double magnification){
-		if(magnification==0)
+		if(magnification==0){
 			initSize();
+			zmove = 0;
+		}
 		else{
 			currentSize *=magnification;
 			currentSize = Math.max(currentSize, -100.0f);

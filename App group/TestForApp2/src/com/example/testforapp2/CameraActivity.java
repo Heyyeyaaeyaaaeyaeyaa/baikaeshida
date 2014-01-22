@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -300,7 +299,14 @@ public class CameraActivity extends Activity {
 				}		
 				try 
 				{
-					Bitmap glBitmap = heyRenderer.getBitmap();
+			        glSurfaceView.queueEvent(new Runnable() {
+			             public void run() {
+			                   heyRenderer.snedBitmapResquest();
+			             }
+			         });
+			        while(!heyRenderer.getResponseFlag());
+			        heyRenderer.setResponseFlag(false);
+			        Bitmap glBitmap = heyRenderer.getBitmap();
 					Bitmap bmp=BitmapFactory.decodeByteArray(data, 0, data.length);
 					Matrix mtx = new Matrix();
 					mtx.postRotate(270);
@@ -325,6 +331,8 @@ public class CameraActivity extends Activity {
 					bmp.compress(CompressFormat.PNG, 100, fos);
 					fos.flush();
 					fos.close();
+					glBitmap.recycle();
+					bmp.recycle();
 				} 
 				catch (FileNotFoundException e)
 				{
