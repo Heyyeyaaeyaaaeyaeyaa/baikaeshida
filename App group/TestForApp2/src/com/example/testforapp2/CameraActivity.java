@@ -1,7 +1,5 @@
 package com.example.testforapp2;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,8 +7,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -25,6 +21,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -77,6 +74,7 @@ public class CameraActivity extends Activity {
 	private ObjSizeManager osm;
 	private SensorEventListener listener;
 	private SensorManager sensorMgr;
+	private boolean takePictureClick = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +114,8 @@ public class CameraActivity extends Activity {
 			@Override
 			public void onClick(View v)
 			{
-				tackPicture();
+				takePictureClick = true;
+				autoFocus();
 			}
 		});
 		buttonFocus.setOnClickListener(new Button.OnClickListener(){
@@ -272,7 +271,7 @@ public class CameraActivity extends Activity {
 	
 	private void autoFocus(){
 		Camera.Parameters parameters = camera.getParameters();
-		parameters.setFocusMode(parameters.FOCUS_MODE_AUTO);
+		parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
 		camera.setParameters(parameters);
 		AutoFocusCallback autoFacusCallback = new AutoFocusCallback()
 		{
@@ -280,12 +279,16 @@ public class CameraActivity extends Activity {
 		    public void onAutoFocus(boolean success, Camera camera)
 		    {
 		        Log.i("onAutoFocus", "onAutoFocus:" + success);
+		        if(takePictureClick == true){
+			        takePictureClick = false;
+			        takePicture();
+		        }
 		    }
 		};
 		camera.autoFocus(autoFacusCallback);
 	}
 	
-	private void tackPicture(){
+	private void takePicture(){
 		final PictureCallback picture = new PictureCallback() 
 		{
 			@Override
