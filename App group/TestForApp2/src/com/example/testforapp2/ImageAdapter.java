@@ -44,7 +44,10 @@ public class ImageAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView imageview = new ImageView(mContext);  
 		//imageview.setImageResource(imgs[position % imgs.length]);
-		imageview.setImageURI(getImage()[position % mUrls.length]);
+		//imageview.setImageURI(getImage()[position % mUrls.length]);
+		
+		imageview.setImageResource(imgs[0]);
+		
         imageview.setLayoutParams(new Gallery.LayoutParams(300, 300));
         imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageview.setBackgroundColor(Color.alpha(1));

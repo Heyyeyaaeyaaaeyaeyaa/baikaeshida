@@ -77,6 +77,8 @@ public class CameraActivity extends Activity {
 	private ObjSizeManager osm;
 	private SensorEventListener listener;
 	private SensorManager sensorMgr;
+	private AngleManager angleMgr;
+	private float angle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,7 @@ public class CameraActivity extends Activity {
 		preview.setLayoutParams(new RelativeLayout.LayoutParams(defaultPictureHeight, defaultPictureWidth));
 		frameLayout.addView(preview);
 		sensorMgr = (SensorManager)getSystemService(SENSOR_SERVICE);
+		angleMgr = new AngleManager();
 		focalLength = 0;
 		foot = 1;
 		rotation = 0;
@@ -150,6 +153,12 @@ public class CameraActivity extends Activity {
 					rotation = ROTATION_UPSIDE_DOWN;
 					Toast.makeText(getApplicationContext(), "倒立", Toast.LENGTH_SHORT).show();
 				}
+				//取手機俯角 的角度
+				angleMgr.setValue(values);
+				angleMgr.setOrientation(rotation);
+				angle = angleMgr.computeAngle();
+				Log.d("angle", "angle= " + angle);
+				
 				
 			}
 		};	
