@@ -156,6 +156,9 @@ public class CameraActivity extends Activity {
 				angleMgr.setValue(values);
 				angleMgr.setOrientation(rotation);
 				angle = angleMgr.computeAngle();
+				float height = 100;
+				focalLength = camera.getParameters().getFocalLength();
+				osm.changeObjSizeByDistance(focalLength,angle, height);
 				Log.d("angle", "angle= " + angle);
 				
 				
@@ -176,7 +179,7 @@ public class CameraActivity extends Activity {
 		glSurfaceView.setRenderer(heyRenderer);
 		glSurfaceView.setOnTouchListener(heyRenderer);
 		glSurfaceView.setLayoutParams(new RelativeLayout.LayoutParams(defaultPictureHeight, defaultPictureWidth));
-        osm = new ObjSizeManager(heyRenderer,focalLength, foot);
+        osm = new ObjSizeManager(heyRenderer);
 	}
  	private void initBroadcast()
 	{
@@ -224,11 +227,7 @@ public class CameraActivity extends Activity {
 		        		
 				        focalLength = camera.getParameters().getFocalLength();
 				        Toast.makeText(getApplicationContext(), "focalLength="+focalLength, Toast.LENGTH_SHORT).show();
-				        osm.setFoot(foot);
-				        osm.setFocalLength(focalLength);
-						magnification = osm.getMagnification();
-						Toast.makeText(getApplicationContext(), "magnification="+magnification, Toast.LENGTH_SHORT).show();
-						osm.changeObjSize(magnification);
+						osm.changeObjSizeByFoot(focalLength,foot);
 		        	}
 		        }
 		    })
