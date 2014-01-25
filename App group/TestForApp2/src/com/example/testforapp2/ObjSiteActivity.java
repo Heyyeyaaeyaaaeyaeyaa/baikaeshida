@@ -1,15 +1,16 @@
 package com.example.testforapp2;
 
-import java.io.File;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -21,10 +22,15 @@ public class ObjSiteActivity extends Activity {
 	private Button buttonBack, buttonApply,buttonSource;
 	private Singleton singleton = Singleton.getSharedInstance();
 	
+	private DBHelper dirDBHelper;
+	private String currentDir;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//在當前的activity中註冊廣播
+		dirDBHelper = new DBHelper(this);
 		IntentFilter filter = new IntentFilter();  
 		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver指定一個action，即要監聽的消息名字  
 		registerReceiver(mBoradcastReceiver,filter); //動態註冊監聽  靜態的話 在AndroidManifest.xml中定義
@@ -34,6 +40,10 @@ public class ObjSiteActivity extends Activity {
 		buttonBack = (Button)this.findViewById(R.id.obj_site_button_back);
 		buttonApply = (Button)this.findViewById(R.id.obj_site_button_apply);
 		buttonSource = (Button)this.findViewById(R.id.source_button);
+		if( (currentDir=findDirectory()) == null )
+			TextInputObjSite.setText("");
+		else
+			TextInputObjSite.setText(currentDir);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
 
@@ -54,12 +64,36 @@ public class ObjSiteActivity extends Activity {
 			}});
 		
 		buttonSource.setOnClickListener(new Button.OnClickListener(){
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			    intent.setType("file/*");
-			    startActivityForResult(intent,0);
-			}});
+            private String m_chosenDir = "";
+            private boolean m_newFolderEnabled = true;
+
+            @Override
+            public void onClick(View v) 
+            {
+                // Create DirectoryChooserDialog and register a callback 
+                DirectoryChooserDialog directoryChooserDialog = 
+                new DirectoryChooserDialog(ObjSiteActivity.this, 
+                    new DirectoryChooserDialog.ChosenDirectoryListener() 
+                {
+                    @Override
+                    public void onChosenDir(String chosenDir) 
+                    {
+                        m_chosenDir = chosenDir;
+                        TextInputObjSite.setText(chosenDir);
+                        Log.e("DB","XX"+m_chosenDir);
+                        updateDB(m_chosenDir);
+                    }
+                }); 
+                // Toggle new folder button enabling
+                directoryChooserDialog.setNewFolderEnabled(m_newFolderEnabled);
+                // Load directory chooser dialog for initial 'm_chosenDir' directory.
+                // The registered callback will be called upon final directory selection.
+
+         
+                directoryChooserDialog.chooseDirectory(m_chosenDir);
+                m_newFolderEnabled = ! m_newFolderEnabled;
+            }
+		});
 	}
 
 	@Override
@@ -123,4 +157,40 @@ public class ObjSiteActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 	}
+	private void updateDB(String chosenDir){
+		String currentDir = findDirectory();
+		if(currentDir==null)
+			insertDir(chosenDir);
+		else
+			updateDir(chosenDir);
+	}
+	private void insertDir(String chosenDir){
+		SQLiteDatabase db = dirDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(dirDBHelper.getFieldName2(), chosenDir);
+        db.insert(dirDBHelper.getTableName(), null, values);
+	}
+	
+	private void updateDir(String chosenDir){
+
+		SQLiteDatabase db = dirDBHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(dirDBHelper.getFieldName2(), chosenDir);
+
+        db.update(dirDBHelper.getTableName(), values, "_id=1", null);
+	}
+	
+	private String findDirectory(){
+		SQLiteDatabase db = dirDBHelper.getReadableDatabase();
+        Cursor cursor = db.query(dirDBHelper.getTableName(), null,null,null, null, null, null);
+        startManagingCursor(cursor);
+        if(cursor.getCount()==0)
+        	return null;
+        else{
+        	 cursor.moveToFirst();
+        	 return cursor.getString(1);
+        	 
+        }
+	}
+	
 }
