@@ -64,6 +64,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private final float TOUCH_SCALE = 0.2f;			//Proved to be good for normal rotation
 	private boolean requestFlag = false;
 	private boolean responseFlag = false;
+	private float initSize = -10.0f;
+	
 	public HeyRenderer(Context context, int height, int width)
 	{
 		this.context=context;
@@ -186,6 +188,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
         					lock = 0;
         					xrot += dy * TOUCH_SCALE;
         					yrot += dx * TOUCH_SCALE;
+        					Log.e("rotation",xrot+"");
         				}
         				break;
         			case 2:    
@@ -260,16 +263,20 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	    return Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
 	}
 	public void changeObjSize(double magnification){
+		initSize();
 		if(magnification==0){
-			initSize();
 			zmove = 0;
 		}
 		else{
-			currentSize *=magnification;
-			currentSize = Math.max(currentSize, -100.0f);
+			currentSize = (float) (initSize*magnification);
+			//currentSize = Math.max(currentSize, -100.0f);
 		}
 	}
 	public void initSize(){
-		currentSize = -10.0f;
+		currentSize = initSize;
+	}
+	public void rotateObj(float angleX, float angleY, float angleZ) {
+		xrot = (float) (-angleX);
+		Log.e("rotation",xrot+"");
 	}
 }

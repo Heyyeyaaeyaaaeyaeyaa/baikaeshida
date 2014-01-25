@@ -59,4 +59,9 @@ public class ObjSizeManager {
 	public void initSize(){
 		heyRenderer.initSize();
 	}
+
+	public void rotateObj(float angleX, float angleY, float angleZ) {
+		heyRenderer.rotateObj(angleX,angleY,angleZ);
+		
+	}
 }

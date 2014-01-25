@@ -76,7 +76,7 @@ public class CameraActivity extends Activity {
 	private SensorManager sensorMgr;
 	private boolean takePictureClick = false;
 	private AngleManager angleMgr;
-	private float angle;
+	private float angle = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,10 +155,18 @@ public class CameraActivity extends Activity {
 				//取手機俯角 的角度
 				angleMgr.setValue(values);
 				angleMgr.setOrientation(rotation);
-				angle = angleMgr.computeAngle();
-				float height = 100;
-				focalLength = camera.getParameters().getFocalLength();
-				osm.changeObjSizeByDistance(focalLength,angle, height);
+				float newAngle = angleMgr.computeAngle();
+				float deltaAngle = Math.abs(angle-newAngle);
+				angle = newAngle;
+				if(deltaAngle>=1.2){
+					float height = 100;
+					float angleX = angle;
+					float angleY = 0;
+					float angleZ = 0;
+					focalLength = camera.getParameters().getFocalLength();
+					osm.changeObjSizeByDistance(focalLength,angle, height);
+					osm.rotateObj(angleX,angleY,angleZ);
+				}
 				Log.d("angle", "angle= " + angle);
 				
 				
