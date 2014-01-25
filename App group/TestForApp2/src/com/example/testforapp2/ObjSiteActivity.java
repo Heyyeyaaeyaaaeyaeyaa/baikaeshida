@@ -21,7 +21,7 @@ public class ObjSiteActivity extends Activity {
 	private EditText TextInputObjSite;
 	private Button buttonBack, buttonApply,buttonSource;
 	private Singleton singleton = Singleton.getSharedInstance();
-	
+	private final String DEFAULT_PATH = "/storage/emulated/0/Pictures/MyCameraApp";
 	private DBHelper dirDBHelper;
 	private String currentDir;
 	
@@ -40,10 +40,8 @@ public class ObjSiteActivity extends Activity {
 		buttonBack = (Button)this.findViewById(R.id.obj_site_button_back);
 		buttonApply = (Button)this.findViewById(R.id.obj_site_button_apply);
 		buttonSource = (Button)this.findViewById(R.id.source_button);
-		if( (currentDir=findDirectory()) == null )
-			TextInputObjSite.setText("");
-		else
-			TextInputObjSite.setText(currentDir);
+		currentDir=findDirectory();
+		TextInputObjSite.setText(currentDir);
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
 
@@ -60,6 +58,9 @@ public class ObjSiteActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				singleton.setSite(TextInputObjSite.getText().toString());
+				currentDir = TextInputObjSite.getText().toString();
+                updateDir(currentDir);
+                singleton.setObjLoadPath(currentDir);
 				/*把輸入的site丟進singleton裡面*/
 			}});
 		
@@ -80,8 +81,8 @@ public class ObjSiteActivity extends Activity {
                     {
                         m_chosenDir = chosenDir;
                         TextInputObjSite.setText(chosenDir);
-                        Log.e("DB","XX"+m_chosenDir);
-                        updateDB(m_chosenDir);
+                        updateDir(m_chosenDir);
+                        singleton.setObjLoadPath(m_chosenDir);
                     }
                 }); 
                 // Toggle new folder button enabling
@@ -134,7 +135,8 @@ public class ObjSiteActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Toast.makeText(this.getApplicationContext(), "ObjSiteDestroy", 1000).show();
+		dirDBHelper.close();
+		Toast.makeText(this.getApplicationContext(), "ObjSiteDestroy", Toast.LENGTH_SHORT).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽
 	}
 
@@ -157,13 +159,6 @@ public class ObjSiteActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 	}
-	private void updateDB(String chosenDir){
-		String currentDir = findDirectory();
-		if(currentDir==null)
-			insertDir(chosenDir);
-		else
-			updateDir(chosenDir);
-	}
 	private void insertDir(String chosenDir){
 		SQLiteDatabase db = dirDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -184,13 +179,12 @@ public class ObjSiteActivity extends Activity {
 		SQLiteDatabase db = dirDBHelper.getReadableDatabase();
         Cursor cursor = db.query(dirDBHelper.getTableName(), null,null,null, null, null, null);
         startManagingCursor(cursor);
-        if(cursor.getCount()==0)
-        	return null;
-        else{
+        if(cursor.getCount()==0){
+        	insertDir(DEFAULT_PATH);
+        	return DEFAULT_PATH;
+        }else{
         	 cursor.moveToFirst();
         	 return cursor.getString(1);
-        	 
         }
 	}
-	
 }

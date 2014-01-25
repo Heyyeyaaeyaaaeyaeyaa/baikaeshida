@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +17,11 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private Button buttonStart, buttonObjSite, buttonAbout, buttonExit;
-	private Singleton singleton;
+	private Singleton singleton = Singleton.getSharedInstance();
+	private final String DEFAULT_PATH = "/storage/emulated/0/Pictures/MyCameraApp";
+	private DBHelper dirDBHelper;
 	public final static String BORADCAST_ACTION_EXIT = "com.wangzhj.exit";//關閉活動廣播action名稱 
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,9 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		Toast.makeText(this.getApplicationContext(), "MainCreate", 1000).show();
+
+		dirDBHelper = new DBHelper(this);
+		loadSQLiteData();
 		
 		buttonStart = (Button)this.findViewById(R.id.main_button_start);
 		buttonObjSite = (Button)this.findViewById(R.id.main_button_obj_site);
@@ -119,6 +127,8 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+
+		dirDBHelper.close();
 		Toast.makeText(this.getApplicationContext(), "MainDestroy", 1000).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽  
 	}
@@ -143,5 +153,23 @@ public class MainActivity extends Activity {
 		super.onStop();
 		Toast.makeText(this.getApplicationContext(), "MainStop", 1000).show();
 	}
-
+	private void loadSQLiteData(){
+		String path = findDirectory();
+		if(path==null)
+			singleton.setObjLoadPath(DEFAULT_PATH);
+		else
+			singleton.setObjLoadPath(path);
+	}
+	private String findDirectory(){
+		SQLiteDatabase db = dirDBHelper.getReadableDatabase();
+        Cursor cursor = db.query(dirDBHelper.getTableName(), null,null,null, null, null, null);
+        startManagingCursor(cursor);
+        if(cursor.getCount()==0){
+        	return null;	
+        }
+        else{
+        	 cursor.moveToFirst();
+        	 return cursor.getString(1);
+        }
+	}
 }
