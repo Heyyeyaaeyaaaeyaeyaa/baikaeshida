@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -43,9 +46,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CameraActivity extends Activity {
+	
+	private TextView textView;
 	private Button buttonBack;
 	private Button buttonCapture;
 	private Button buttonFocus;
@@ -74,9 +80,16 @@ public class CameraActivity extends Activity {
 	private ObjSizeManager osm;
 	private SensorEventListener listener;
 	private SensorManager sensorMgr;
+	
 	private boolean takePictureClick = false;
 	private AngleManager angleMgr;
 	private float angle = 0;
+	private float newAngle = 0;
+	
+	private float[] accelerometer_values;
+	private float[] magnitude_values;
+	private float[] angle_rotation; //旋轉角度 有正負號 使用前請先自行觀測數據變化
+	private float[] rMtrix; //rotation matrix
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +98,8 @@ public class CameraActivity extends Activity {
 		setContentView(R.layout.activity_camera);
 		initBroadcast();		
 		initGlSurfaceView();
-	
+		
+		textView = (TextView)this.findViewById(R.id.camera_text_title);
 		buttonBack = (Button)this.findViewById(R.id.camera_button_back);
 		buttonCapture = (Button)this.findViewById(R.id.camera_button_capture);
 		buttonFocus = (Button)this.findViewById(R.id.camera_button_focus);
@@ -103,6 +117,8 @@ public class CameraActivity extends Activity {
 		focalLength = 0;
 		foot = 1;
 		rotation = 0;
+		angle_rotation = new float[3]; 
+		rMtrix = new float[9]; 
 		
 		buttonBack.setOnClickListener(new Button.OnClickListener(){
 			@Override
@@ -134,44 +150,138 @@ public class CameraActivity extends Activity {
 			}
 			@Override
 			public void onSensorChanged(SensorEvent event) {
+				
+				
+				
+				
+				
+				
+				//以下是取旋轉角度
+				//http://epaper.gotop.com.tw/pdf/AEL011000.pdf
+				//詳細請看方向感測器章節的說明
+				switch (event.sensor.getType()) { 
+					case Sensor.TYPE_ACCELEROMETER: 
+						accelerometer_values = (float[]) event.values.clone(); 
+						break; 
+					case Sensor.TYPE_MAGNETIC_FIELD: 
+						magnitude_values = (float[]) event.values.clone(); 
+						break; 
+					default: 
+						break; 
+				} 
+				
+				if (magnitude_values != null && accelerometer_values != null) { 
+					
+					//float[] R = new float[9]; 
+					//float[] angle_rotation = new float[3]; 
+					
+					SensorManager.getRotationMatrix(rMtrix, null, accelerometer_values, magnitude_values); 
+					SensorManager.getOrientation(rMtrix, angle_rotation); 
+					
+					StringBuilder sensorInfo = new StringBuilder(); 
+					
+					for (int i = 0; i < angle_rotation.length; i++) {
+						angle_rotation[i] = (float) (angle_rotation[i]*180/3.14); // 轉換到 度數		
+						BigDecimal bd = new BigDecimal(angle_rotation[i]); 
+						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方法
+						sensorInfo.append(" - 旋轉角度 [" + i + "] = " + angle_rotation[i] + "\n");
+					}
+					textView.setText(sensorInfo);
+					
+					
+					
+					
+					
+					
+					if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+					
+						float value[] = event.values;
+						if(angle_rotation[1] < 0 && angle_rotation[1] > -90){
+							newAngle = Math.abs(angle_rotation[1]);
+						}
+
+						if(value[2] < 0)
+							newAngle = 90;
+						else if(value[1] < 0)
+							newAngle = 0;	
+					}
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+					
+				} 
+				//以上是取旋轉角度
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				Sensor sensor = event.sensor;
 				float[] values = event.values;
-				if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直立
-					rotation = ROTATION_VERTICAL;
-					Toast.makeText(getApplicationContext(), "直立", Toast.LENGTH_SHORT).show();
+				
+				
+				if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+	
+					if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直立
+						rotation = ROTATION_VERTICAL;
+						Toast.makeText(getApplicationContext(), "直立", Toast.LENGTH_SHORT).show();
+					}
+					else if(values[0] > 9 && rotation != ROTATION_LEFT_HORIZONTAL){
+						rotation = ROTATION_LEFT_HORIZONTAL;
+						Toast.makeText(getApplicationContext(), "左旋轉 橫立", Toast.LENGTH_SHORT).show();
+					}
+					else if(values[0] < -9 && rotation != ROTATION_RIGHT_HORIZONTAL){
+						rotation = ROTATION_RIGHT_HORIZONTAL;
+						Toast.makeText(getApplicationContext(), "右旋轉 橫立", Toast.LENGTH_SHORT).show();
+					}
+					else if(values[1] < -9 && rotation != ROTATION_UPSIDE_DOWN){
+						rotation = ROTATION_UPSIDE_DOWN;
+						Toast.makeText(getApplicationContext(), "倒立", Toast.LENGTH_SHORT).show();
+					}
+					//取手機俯角 的角度
+					
+					angleMgr.setAngleRotation(angle_rotation);
+					angleMgr.setValue(values);
+					angleMgr.setOrientation(rotation);
+					
+					float newAngle = angleMgr.computeAngle();
+					float deltaAngle = Math.abs(angle-newAngle);
+					angle = newAngle;
+					if(deltaAngle>=1.2){
+						float height = 100;
+						float angleX = angle;
+						float angleY = 0;
+						float angleZ = 0;
+						focalLength = camera.getParameters().getFocalLength();
+						osm.changeObjSizeByDistance(focalLength,angle, height);
+						osm.rotateObj(angleX,angleY,angleZ);
+					}
+					Log.d("angle", "angle= " + angle);
+					
 				}
-				else if(values[0] > 9 && rotation != ROTATION_LEFT_HORIZONTAL){
-					rotation = ROTATION_LEFT_HORIZONTAL;
-					Toast.makeText(getApplicationContext(), "左旋轉 橫立", Toast.LENGTH_SHORT).show();
-				}
-				else if(values[0] < -9 && rotation != ROTATION_RIGHT_HORIZONTAL){
-					rotation = ROTATION_RIGHT_HORIZONTAL;
-					Toast.makeText(getApplicationContext(), "右旋轉 橫立", Toast.LENGTH_SHORT).show();
-				}
-				else if(values[1] < -9 && rotation != ROTATION_UPSIDE_DOWN){
-					rotation = ROTATION_UPSIDE_DOWN;
-					Toast.makeText(getApplicationContext(), "倒立", Toast.LENGTH_SHORT).show();
-				}
-				//取手機俯角 的角度
-				angleMgr.setValue(values);
-				angleMgr.setOrientation(rotation);
-				float newAngle = angleMgr.computeAngle();
-				float deltaAngle = Math.abs(angle-newAngle);
-				angle = newAngle;
-				if(deltaAngle>=1.2){
-					float height = 100;
-					float angleX = angle;
-					float angleY = 0;
-					float angleZ = 0;
-					focalLength = camera.getParameters().getFocalLength();
-					osm.changeObjSizeByDistance(focalLength,angle, height);
-					osm.rotateObj(angleX,angleY,angleZ);
-				}
-				Log.d("angle", "angle= " + angle);
+				
 				
 				
 			}
-		};	
+		};
 		
 		
 		
@@ -399,6 +509,18 @@ public class CameraActivity extends Activity {
         preview.setCamera(camera);
 
 		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI); 
+		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_UI); 
+		
+		
+		/*if(!(sensorMgr.registerListener(listener, sensorMgr 
+				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 
+				SensorManager.SENSOR_DELAY_UI) && 
+				sensorMgr.registerListener(listener, sensorMgr 
+				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 
+				SensorManager.SENSOR_DELAY_UI))){ 
+				Log.w("OrientationEx", "sensor not found!"); 
+				sensorMgr.unregisterListener(listener); 
+		}*/
 	}
 	/**combine photo and image to a bitmap */
 	public Bitmap combineImages(Bitmap cameraBitmap, Bitmap glImageBitmap) 
