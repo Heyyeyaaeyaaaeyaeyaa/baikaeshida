@@ -84,6 +84,9 @@ public class CameraActivity extends Activity {
 	private boolean takePictureClick = false;
 	private AngleManager angleMgr;
 	private float angle = 0;
+	private float angleX = 0;
+	private float angleY = 0;
+	private float angleZ = 0;
 	private float newAngle = 0;
 	
 	private float[] accelerometer_values;
@@ -181,7 +184,7 @@ public class CameraActivity extends Activity {
 					StringBuilder sensorInfo = new StringBuilder(); 
 					
 					for (int i = 0; i < angle_rotation.length; i++) {
-						angle_rotation[i] = (float) (angle_rotation[i]*180/3.14); // 轉換到 度數		
+						angle_rotation[i] = (float) (angle_rotation[i]*180/Math.PI); // 轉換到 度數		
 						BigDecimal bd = new BigDecimal(angle_rotation[i]); 
 						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方法
 						sensorInfo.append(" - 旋轉角度 [" + i + "] = " + angle_rotation[i] + "\n");
@@ -205,38 +208,13 @@ public class CameraActivity extends Activity {
 						else if(value[1] < 0)
 							newAngle = 0;	
 					}
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-					
+		
 				} 
 				//以上是取旋轉角度
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+					
 				Sensor sensor = event.sensor;
 				float[] values = event.values;
-				
+				int rotationState = (values[2] >= 0) ? ROTATION_VERTICAL : ROTATION_UPSIDE_DOWN;
 				
 				if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 	
@@ -262,19 +240,28 @@ public class CameraActivity extends Activity {
 					angleMgr.setValue(values);
 					angleMgr.setOrientation(rotation);
 					
-					float newAngle = angleMgr.computeAngle();
-					float deltaAngle = Math.abs(angle-newAngle);
-					angle = newAngle;
-					if(deltaAngle>=1.2){
-						float height = 100;
-						float angleX = angle;
-						float angleY = 0;
-						float angleZ = 0;
+
+					float newAngleX = angle_rotation[1];
+					float deltaAngle = Math.abs(angleX-newAngleX);
+					float newAngleY = angle_rotation[2];
+						  deltaAngle += Math.abs(angleY-newAngleY);
+					float newAngleZ = angle_rotation[0];
+						  //deltaAngle += Math.abs(angleZ-newAngleZ);
+					angleX = newAngleX;
+					angleY = newAngleY;
+					angleZ = newAngleZ;
+					//boolean condition1 = (angleX>65||angleX<-65)&&deltaAngle>40;
+					//boolean condition2 = (angleX<=65 && angleX>=-65)&&deltaAngle>4;
+					if(deltaAngle>2){
+						Log.e("Log",deltaAngle+"");
+						float height = 500;
 						focalLength = camera.getParameters().getFocalLength();
-						osm.changeObjSizeByDistance(focalLength,angle, height);
-						osm.rotateObj(angleX,angleY,angleZ);
+						if(rotation==ROTATION_LEFT_HORIZONTAL||rotation==ROTATION_RIGHT_HORIZONTAL)
+							osm.changeObjSizeByDistance(focalLength,angleY, height);
+						else
+							osm.changeObjSizeByDistance(focalLength,angleX, height);
+						osm.rotateObj(angleX,angleY,angleZ,rotationState);
 					}
-					Log.d("angle", "angle= " + angle);
 					
 				}
 				

@@ -32,9 +32,11 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private int testTexture = R.raw.simba1;
 	private String[] dataFileName;
 	
+	
 	/* Rotation values */
 	private float xrot;					//X Rotation
 	private float yrot;					//Y Rotation
+	private float zrot;					//Z Rotation
 	private float xmove;
 	private float ymove;
 	private float zmove;
@@ -43,6 +45,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private int height;
 	private int width;
 	private Bitmap bitmap;
+	private final int ROTATION_VERTICAL = 0;
+	private final int ROTATION_UPSIDE_DOWN = 3;
 	
 	/* 
 	 * The initial light values for ambient and diffuse
@@ -132,10 +136,11 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
 		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, currentSize);	//Move down 1.0 Unit And Into The Screen 7.0
-		gl.glScalef(0.02f-zmove, 0.02f-zmove, 0.02f-zmove);
+		gl.glScalef(0.1f-zmove, 0.1f-zmove, 0.02f-zmove);
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
+		gl.glRotatef(zrot, 0.0f, 0.0f, 1.0f);	//Z
 
 		for(int i=0;i<shapeCount;i++){
 			shapes[i].draw(gl);
@@ -275,8 +280,16 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	public void initSize(){
 		currentSize = initSize;
 	}
-	public void rotateObj(float angleX, float angleY, float angleZ) {
-		xrot = (float) (-angleX);
-		Log.e("rotation",xrot+"");
+	public void rotateObj(float angleX, float angleY, float angleZ, int rotationState) {
+		if(rotationState == ROTATION_VERTICAL){
+			xrot = (float) (angleX);
+			yrot = (float) (-angleY);
+			zrot = (float) (angleZ);
+		}
+		else if(rotationState == ROTATION_UPSIDE_DOWN){
+			xrot = (float) (-angleX);
+			yrot = (float) (-angleY);
+			zrot = (float) (angleZ);
+		}
 	}
 }
