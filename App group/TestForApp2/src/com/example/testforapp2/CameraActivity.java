@@ -256,10 +256,10 @@ public class CameraActivity extends Activity {
 						Log.e("Log",deltaAngle+"");
 						float height = 500;
 						focalLength = camera.getParameters().getFocalLength();
-						if(rotation==ROTATION_LEFT_HORIZONTAL||rotation==ROTATION_RIGHT_HORIZONTAL)
-							osm.changeObjSizeByDistance(focalLength,angleY, height);
-						else
-							osm.changeObjSizeByDistance(focalLength,angleX, height);
+//						if(rotation==ROTATION_LEFT_HORIZONTAL||rotation==ROTATION_RIGHT_HORIZONTAL)
+//							osm.changeObjSizeByDistance(focalLength,angleY, height);
+//						else
+//							osm.changeObjSizeByDistance(focalLength,angleX, height);
 						osm.rotateObj(angleX,angleY,angleZ,rotationState);
 					}
 					

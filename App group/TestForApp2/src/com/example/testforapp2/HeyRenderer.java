@@ -136,7 +136,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
 		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, currentSize);	//Move down 1.0 Unit And Into The Screen 7.0
-		gl.glScalef(0.1f-zmove, 0.1f-zmove, 0.02f-zmove);
+		gl.glScalef(0.02f-zmove, 0.02f-zmove, 0.02f-zmove);
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
@@ -268,6 +268,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	    return Bitmap.createBitmap(bitmapSource, w, h, Bitmap.Config.ARGB_8888);
 	}
 	public void changeObjSize(double magnification){
+		
 		initSize();
 		if(magnification==0){
 			zmove = 0;
