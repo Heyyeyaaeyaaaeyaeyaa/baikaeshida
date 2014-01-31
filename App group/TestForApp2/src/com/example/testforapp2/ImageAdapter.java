@@ -46,13 +46,12 @@ public class ImageAdapter extends BaseAdapter {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView imageview = new ImageView(mContext);  
-		//imageview.setImageResource(imgs[position % imgs.length]);
 		if((mUrls = getImage())!=null)
 			imageview.setImageURI(mUrls[position % mUrls.length]);
 		else
-			imageview.setImageResource(imgs[0]);
+			imageview.setImageResource(imgs[position % imgs.length]);
 		
-        imageview.setLayoutParams(new Gallery.LayoutParams(300, 300));
+        imageview.setLayoutParams(new Gallery.LayoutParams(100, 100));
         imageview.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageview.setBackgroundColor(Color.alpha(1));
         return imageview;
@@ -84,4 +83,11 @@ public class ImageAdapter extends BaseAdapter {
 		return mUrls;
 	}
 
+	public Integer[] getImgs() {
+		return imgs;
+	}
+
+	public void setImgs(Integer[] imgs) {
+		this.imgs = imgs;
+	}
 }

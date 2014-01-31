@@ -12,13 +12,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.Gallery.LayoutParams;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher.ViewFactory;
 
 public class ChooseObjActivity extends Activity {
 	private Button buttonBack, buttonSelect;
 	private ImageAdapter imgAdapter = null;
 	private Gallery gallery = null;
 	private Singleton singleton;
+	private ImageSwitcher imageSwitcher;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +36,38 @@ public class ChooseObjActivity extends Activity {
 		
 		gallery = (Gallery) findViewById(R.id.gallery);  
         imgAdapter = new ImageAdapter(this);  
+        imageSwitcher = (ImageSwitcher)findViewById(R.id.imageSwitcher);
         
+        imageSwitcher.setFactory(new ViewFactory() {  
+            @Override  
+            public View makeView() {  
+                // TODO Auto-generated method stub  
+                ImageView i = new ImageView(ChooseObjActivity.this);  
+                // 把圖片按比例擴大/縮小到View的寬度，置中顯示  
+                i.setScaleType(ImageView.ScaleType.FIT_CENTER);  
+                i.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,  
+                        LayoutParams.MATCH_PARENT));  
+                return i;  
+            }  
+        });
+        
+        // 設置點擊圖片的監聽事件（需要用手點擊才觸發，滑動時不觸發） 
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {  
             @Override  
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  
                 Toast.makeText(ChooseObjActivity.this, "點擊圖片 " + (position + 1), 100).show();  
             }  
         });          
-        // 設置點擊圖片的監聽事件（需要用手點擊才觸發，滑動時不觸發）  
+        
+        // 設置選中圖片的監聽事件（當圖片滑到螢幕正中，則視為自動選中）  
         gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  
             @Override  
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {  
                 Toast.makeText(ChooseObjActivity.this, "選中圖片 " + (position + 1), 20).show();  
+                if(imgAdapter.getImage() != null)
+        			imageSwitcher.setImageURI(imgAdapter.getImage()[position % imgAdapter.getImage().length]);
+        		else
+        			imageSwitcher.setImageResource(imgAdapter.getImgs()[position % imgAdapter.getImgs().length]);
             }  
       
             @Override  
@@ -50,7 +75,7 @@ public class ChooseObjActivity extends Activity {
                   
             }  
         });        
-        // 設置選中圖片的監聽事件（當圖片滑到螢幕正中，則視為自動選中）  
+        
         gallery.setUnselectedAlpha(0.3f);                   // 設置未選中圖片的透明度  
         gallery.setSpacing(40); 
 		
