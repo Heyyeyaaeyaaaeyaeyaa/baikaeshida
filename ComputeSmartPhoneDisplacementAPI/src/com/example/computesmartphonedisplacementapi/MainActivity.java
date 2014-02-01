@@ -6,6 +6,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
@@ -30,6 +31,17 @@ public class MainActivity extends Activity {
         GyroscopeValue = new float[3];
         
         listener = new SensorEventListener() { 
+        	private static final float NS2S = 1.0f / 1000000000.0f;
+        	private float timestamp;
+        	private float velocityXE;
+        	private float velocityYE;
+        	private float velocityZE;
+        	private float velocityX;
+        	private float velocityY;
+        	private float velocityZ;
+        	private float deitanceX;
+        	private float deitanceY;
+        	private float deitanceZ;
     		@Override
     		public void onAccuracyChanged(Sensor sensor, int accuracy) {
     			// TODO Auto-generated method stub
@@ -54,6 +66,50 @@ public class MainActivity extends Activity {
 	    			for (int i = 0; i < linearAccelerationValue.length; i++) 
 	    				sensorInfo.append("-values[" + i + "] = " + linearAccelerationValue[i] + "\n");
 	    			tvMsg1.setText(sensorInfo);
+	    			
+	    			
+	    			
+	    			 if (timestamp != 0) {
+	    				    final float dT = (event.timestamp - timestamp) * NS2S;
+	    				    // Axis of the rotation sample, not normalized yet.
+	    				    float axisX = event.values[0];
+	    				    float axisY = event.values[1];
+	    				    float axisZ = event.values[2];
+
+	    				    // Calculate the angular speed of the sample
+	    				    double acceleration = Math.sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
+
+	    				    // Normalize the rotation vector if it's big enough to get the axis
+	    				    // (that is, EPSILON should represent your maximum allowable margin of error)
+//	    				    if (acceleration > EPSILON) {
+//	    				      axisX /= acceleration;
+//	    				      axisY /= acceleration;
+//	    				      axisZ /= acceleration;
+//	    				    }
+
+	    				    // Integrate around this axis with the angular speed by the timestep
+	    				    // in order to get a delta rotation from this sample over the timestep
+	    				    // We will convert this axis-angle representation of the delta rotation
+	    				    // into a quaternion before turning it into the rotation matrix.
+	    				    velocityX  = velocityXE + axisX * dT;
+	    				    velocityY  = velocityYE + axisY * dT;
+	    				    velocityZ  = velocityZE + axisZ * dT;
+	    				    deitanceX += velocityXE * dT + (axisX * dT * dT / 2.0f);
+	    				    deitanceY += velocityYE * dT + (axisY * dT * dT / 2.0f);
+	    				    deitanceZ += velocityZE * dT + (axisZ * dT * dT / 2.0f);
+	    				    velocityXE = velocityX;
+	    				    velocityYE = velocityY;
+	    				    velocityZE = velocityZ;
+
+	    				  }
+	    				  timestamp = event.timestamp;
+	    				//  if(velocityX+velocityY+velocityZ)
+	    				  //Log.e("Linear","X: "+velocityX);
+	    				 // Log.e("Linear","Y: "+velocityY);
+	    				  Log.e("Linear","Z: "+(int)(deitanceZ*1000));
+	    					    			
+	    			
+	    			
 	    			
 					break; 
 				case Sensor.TYPE_GYROSCOPE: 
