@@ -90,7 +90,7 @@ public class CameraActivity extends Activity {
 	private float newAngle = 0;
 	
 	private float[] accelerometer_values;
-	private float[] magnitude_values;
+	private float[] rotationVectors;
 	private float[] angle_rotation; //旋轉角度 有正負號 使用前請先自行觀測數據變化
 	private float[] rMtrix; //rotation matrix
 	
@@ -166,48 +166,23 @@ public class CameraActivity extends Activity {
 					case Sensor.TYPE_ACCELEROMETER: 
 						accelerometer_values = (float[]) event.values.clone(); 
 						break; 
-					case Sensor.TYPE_MAGNETIC_FIELD: 
-						magnitude_values = (float[]) event.values.clone(); 
+					case Sensor.TYPE_ROTATION_VECTOR: 
+						rotationVectors = (float[]) event.values.clone(); 
 						break; 
 					default: 
 						break; 
 				} 
 				
-				if (magnitude_values != null && accelerometer_values != null) { 
-					
-					//float[] R = new float[9]; 
-					//float[] angle_rotation = new float[3]; 
-					
-					SensorManager.getRotationMatrix(rMtrix, null, accelerometer_values, magnitude_values); 
-					SensorManager.getOrientation(rMtrix, angle_rotation); 
-					
+				if (rotationVectors != null) { 
 					StringBuilder sensorInfo = new StringBuilder(); 
 					
-					for (int i = 0; i < angle_rotation.length; i++) {
-						angle_rotation[i] = (float) (angle_rotation[i]*180/Math.PI); // 轉換到 度數		
-						BigDecimal bd = new BigDecimal(angle_rotation[i]); 
-						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方法
-						sensorInfo.append(" - 旋轉角度 [" + i + "] = " + angle_rotation[i] + "\n");
+					for (int i = 0; i < rotationVectors.length; i++) {
+						rotationVectors[i] = (float) (rotationVectors[i]*180/Math.PI); // 轉換到 度數		
+						BigDecimal bd = new BigDecimal(rotationVectors[i]); 
+						rotationVectors[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方法
+						sensorInfo.append(" - 旋轉角度 [" + i + "] = " + String.format("%.1f",rotationVectors[i]*Math.PI) + "\n");
 					}
 					textView.setText(sensorInfo);
-					
-					
-					
-					
-					
-					
-					if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-					
-						float value[] = event.values;
-						if(angle_rotation[1] < 0 && angle_rotation[1] > -90){
-							newAngle = Math.abs(angle_rotation[1]);
-						}
-
-						if(value[2] < 0)
-							newAngle = 90;
-						else if(value[1] < 0)
-							newAngle = 0;	
-					}
 		
 				} 
 				//以上是取旋轉角度
@@ -236,36 +211,30 @@ public class CameraActivity extends Activity {
 					}
 					//取手機俯角 的角度
 					
-					angleMgr.setAngleRotation(angle_rotation);
-					angleMgr.setValue(values);
-					angleMgr.setOrientation(rotation);
-					
+//					angleMgr.setAngleRotation(angle_rotation);
+//					angleMgr.setValue(values);
+//					angleMgr.setOrientation(rotation);
+//					
+//
+//					float newAngleX = angle_rotation[1];
+//					float deltaAngle = Math.abs(angleX-newAngleX);
+//					float newAngleY = angle_rotation[2];
+//						  deltaAngle += Math.abs(angleY-newAngleY);
+//					float newAngleZ = angle_rotation[0];
+//						  //deltaAngle += Math.abs(angleZ-newAngleZ);
 
-					float newAngleX = angle_rotation[1];
-					float deltaAngle = Math.abs(angleX-newAngleX);
-					float newAngleY = angle_rotation[2];
-						  deltaAngle += Math.abs(angleY-newAngleY);
-					float newAngleZ = angle_rotation[0];
-						  //deltaAngle += Math.abs(angleZ-newAngleZ);
-					angleX = newAngleX;
-					angleY = newAngleY;
-					angleZ = newAngleZ;
-					//boolean condition1 = (angleX>65||angleX<-65)&&deltaAngle>40;
-					//boolean condition2 = (angleX<=65 && angleX>=-65)&&deltaAngle>4;
-					if(deltaAngle>2){
-						Log.e("Log",deltaAngle+"");
-						float height = 500;
-						focalLength = camera.getParameters().getFocalLength();
-//						if(rotation==ROTATION_LEFT_HORIZONTAL||rotation==ROTATION_RIGHT_HORIZONTAL)
-//							osm.changeObjSizeByDistance(focalLength,angleY, height);
-//						else
-//							osm.changeObjSizeByDistance(focalLength,angleX, height);
-						osm.rotateObj(angleX,angleY,angleZ,rotationState);
-					}
+//					}
 					
 				}
 				
-				
+				angleX =(float) (rotationVectors[0]*Math.PI);
+				angleY =(float) (rotationVectors[1]*Math.PI);
+				angleZ =(float) (rotationVectors[2]*Math.PI);
+//				//boolean condition1 = (angleX>65||angleX<-65)&&deltaAngle>40;
+//				//boolean condition2 = (angleX<=65 && angleX>=-65)&&deltaAngle>4;
+//				if(deltaAngle>2){
+//					focalLength = camera.getParameters().getFocalLength();
+					osm.rotateObj(angleX,angleY,angleZ,rotationState);
 				
 			}
 		};
@@ -495,9 +464,10 @@ public class CameraActivity extends Activity {
 		findAndSetPictureSupportSize(camera,defaultPictureExpectedSize);
         preview.setCamera(camera);
 
-		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI); 
-		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_UI); 
+//		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI); 
+//		sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_UI); 
 		
+        sensorMgr.registerListener(listener, sensorMgr.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_UI); 
 		
 		/*if(!(sensorMgr.registerListener(listener, sensorMgr 
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 

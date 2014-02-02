@@ -282,15 +282,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		currentSize = initSize;
 	}
 	public void rotateObj(float angleX, float angleY, float angleZ, int rotationState) {
-		if(rotationState == ROTATION_VERTICAL){
-			xrot = (float) (angleX);
-			yrot = (float) (-angleY);
-			zrot = (float) (angleZ);
-		}
-		else if(rotationState == ROTATION_UPSIDE_DOWN){
 			xrot = (float) (-angleX);
 			yrot = (float) (-angleY);
-			zrot = (float) (angleZ);
-		}
+			zrot = (float) (-angleZ);
 	}
 }
