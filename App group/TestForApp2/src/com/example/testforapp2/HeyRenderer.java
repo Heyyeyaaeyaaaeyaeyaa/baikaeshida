@@ -27,11 +27,10 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private Shape[] shapes;
 	private Context context;
 	
-	private String testFilename = "Simba01.data";
-	private int shapeCount = 2;
-	private int testTexture = R.raw.simba1;
+	private int shapeCount = 0;
+	private int[] testTexture = {R.raw.simba1,R.raw.simba2};
 	private String[] dataFileName;
-	
+	private float objInitScale;
 	
 	/* Rotation values */
 	private float xrot;					//X Rotation
@@ -93,10 +92,13 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		lightPositionBuffer.put(lightPosition);
 		lightPositionBuffer.position(0);
 		
+		ObjDataFileHelper odfh = new ObjDataFileHelper();
+		
+		shapeCount = odfh.getObjDataFileCount();
+		dataFileName = odfh.getObjDataFileNameList();
+		objInitScale = odfh.getObjInitScale();
+		
 		shapes = new Shape[shapeCount];
-		dataFileName = new String[shapeCount];
-		dataFileName[0] = testFilename;
-		dataFileName[1] = "Simba02.data";
 		for(int i=0;i<shapeCount;i++){
 			LoadObjData loadObjData=new LoadObjData(context,dataFileName[i]);
 			ObjData objData=loadObjData.getObjData();
@@ -115,8 +117,9 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		gl.glEnable(GL10.GL_LIGHT0);
 		gl.glEnable(GL10.GL_LIGHTING);
 		
-		shapes[0].loadTexture(gl, context,testTexture);
-		shapes[1].loadTexture(gl, context,R.raw.simba2);
+		for(int i = 0; i < shapes.length; i++){
+			shapes[i].loadTexture(gl, context,testTexture[i]);
+		}
 		
 		gl.glShadeModel(GL10.GL_SMOOTH); 			//Enable Smooth Shading
 		//gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f); 	//Black Background
@@ -136,7 +139,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		gl.glLoadIdentity();				//Reset The Current Modelview Matrix
 		//Drawing
 		gl.glTranslatef(0.0f+xmove, 0.0f-ymove, currentSize);	//Move down 1.0 Unit And Into The Screen 7.0
-		gl.glScalef(0.02f-zmove, 0.02f-zmove, 0.02f-zmove);
+		gl.glScalef(objInitScale-zmove, objInitScale-zmove, objInitScale -zmove);
 		//Rotate around the axis based on the rotation matrix (rotation, x, y, z)
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y

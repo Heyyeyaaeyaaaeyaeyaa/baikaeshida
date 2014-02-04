@@ -22,7 +22,7 @@ public class ChooseObjActivity extends Activity {
 	private Button buttonBack, buttonSelect;
 	private ImageAdapter imgAdapter = null;
 	private Gallery gallery = null;
-	private Singleton singleton;
+	private Singleton singleton = Singleton.getSharedInstance();
 	private ImageSwitcher imageSwitcher;
 	
 	@Override
@@ -62,11 +62,12 @@ public class ChooseObjActivity extends Activity {
         // 設置選中圖片的監聽事件（當圖片滑到螢幕正中，則視為自動選中）  
         gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  
             @Override  
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {  
-                Toast.makeText(ChooseObjActivity.this, "選中圖片 " + (position + 1), 20).show();  
-                if(imgAdapter.getImage() != null)
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {   
+                if(imgAdapter.getImage() != null){
         			imageSwitcher.setImageURI(imgAdapter.getImage()[position % imgAdapter.getImage().length]);
-        		else
+        			singleton.setChoosenObjImageFileName(imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment());
+                    Toast.makeText(ChooseObjActivity.this, "選中圖片 " + imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment(), 20).show(); 
+                }else
         			imageSwitcher.setImageResource(imgAdapter.getImgs()[position % imgAdapter.getImgs().length]);
             }  
       
