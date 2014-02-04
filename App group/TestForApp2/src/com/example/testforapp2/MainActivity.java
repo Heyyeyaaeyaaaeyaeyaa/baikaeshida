@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	private Button buttonStart, buttonObjSite, buttonAbout, buttonExit;
@@ -32,7 +31,6 @@ public class MainActivity extends Activity {
         registerReceiver(mBoradcastReceiver,filter); //動態註冊監聽  靜態的話 在AndroidManifest.xml中定義
 		
 		setContentView(R.layout.activity_main);
-		Toast.makeText(this.getApplicationContext(), "MainCreate", 1000).show();
 
 		dirDBHelper = new DBHelper(this);
 		loadSQLiteData();
@@ -129,7 +127,6 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 
 		dirDBHelper.close();
-		Toast.makeText(this.getApplicationContext(), "MainDestroy", 1000).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽  
 	}
 
@@ -137,21 +134,18 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Toast.makeText(this.getApplicationContext(), "MainPause", 1000).show();
 	}
 
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Toast.makeText(this.getApplicationContext(), "MainStart", 1000).show();
 	}
 
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		Toast.makeText(this.getApplicationContext(), "MainStop", 1000).show();
 	}
 	private void loadSQLiteData(){
 		String path = findDirectory();

@@ -9,7 +9,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback{
 	private SurfaceHolder holder;
@@ -51,7 +50,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// TODO Auto-generated catch block
 			Log.e(TAG, "IOException caused by setPreviewDisplay()", e);
 		}
-		camera.setDisplayOrientation(90);//µe­±¶¶®ÉÄÁ±ÛÂà90«×
+		camera.setDisplayOrientation(90);//ï½µeï½­ï½±ï½¶ï½¶ï½®ï¾‰ï¾„ï¾ï½±ï¾›ï¾‚ï¿½90ï½«ï¾—
 		camera.startPreview();
 	}
 

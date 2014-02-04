@@ -467,7 +467,6 @@ public class CameraActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Toast.makeText(this.getApplicationContext(), "CameraDestroy", Toast.LENGTH_SHORT).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽
 	}
 	@Override

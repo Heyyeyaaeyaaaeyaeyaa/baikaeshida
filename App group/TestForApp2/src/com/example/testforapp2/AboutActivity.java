@@ -55,7 +55,6 @@ public class AboutActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Toast.makeText(this.getApplicationContext(), "AboutDestroy", Toast.LENGTH_SHORT).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽
 	}
 

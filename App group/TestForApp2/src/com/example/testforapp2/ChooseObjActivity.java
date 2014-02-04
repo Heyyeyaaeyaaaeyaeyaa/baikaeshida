@@ -129,7 +129,6 @@ public class ChooseObjActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Toast.makeText(this.getApplicationContext(), "chooseObjDestroy", 1000).show();
 		unregisterReceiver(mBoradcastReceiver); //取消監聽
 	}
 
