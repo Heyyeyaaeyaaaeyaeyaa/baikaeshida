@@ -7,8 +7,7 @@ public class Singleton {
     /*****Variable************/
     private String site;
     private String objLoadPath;
-    private String[] objDataFileName;
-    private String objName;
+    private String choosenObjImageFileName;
 	/*************************/
     
     private Singleton(){//私有 不給他人宣告
@@ -28,17 +27,11 @@ public class Singleton {
 	public void setSite(String site) {
 		this.site = site;
 	}
-	public String[] getObjDataFileName(){
-		return objDataFileName;
+	public String getChoosenObjImageFileName(){
+		return choosenObjImageFileName;
 	}
-	public void setObjDataFileName(String[] objDataFileName){
-		this.objDataFileName = objDataFileName;
-	}
-	public String getObjName(){
-		return objName;
-	}
-	public void setObjName(String objName){
-		this.objName = objName;
+	public void setChoosenObjImageFileName(String choosenObjImageFileName){
+		this.choosenObjImageFileName = choosenObjImageFileName;
 	}
 	public String getObjLoadPath(){
 		return objLoadPath;
