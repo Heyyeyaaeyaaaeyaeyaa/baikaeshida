@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.camera;
 
 import java.io.IOException;
 
@@ -50,7 +50,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// TODO Auto-generated catch block
 			Log.e(TAG, "IOException caused by setPreviewDisplay()", e);
 		}
-		camera.setDisplayOrientation(90);//?�e?�?�?�?�?�?��?�?��?�ﾂ�90?�??
+		camera.setDisplayOrientation(90);//???�e???�???�???�???�???�???�??�???�???�??�???�??�?�90???�??
 		camera.startPreview();
 	}
 

@@ -1,8 +1,8 @@
 eclipse.preferences.version=1
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/AboutActivity.java=UTF-8
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/CameraActivity.java=UTF-8
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/CameraPreview.java=UTF-8
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/ChooseObjActivity.java=UTF-8
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/MainActivity.java=UTF-8
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/ObjSiteActivity.java=UTF-8
-encoding//src/com/heyyeyaaeyaaaeyaeyaa/furnituresimulationapp/Singleton.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/about/AboutActivity.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/camera/camera/CameraActivity.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/camera/camera/CameraPreview.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/main/MainActivity.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/select_obj_file/ChooseObjActivity.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/set_obj_file_location/ObjSiteActivity.java=UTF-8
+encoding//src/com/heyyeyaaeyaaaeyaeyaa/furniture_simulation_app/shared/Singleton.java=UTF-8

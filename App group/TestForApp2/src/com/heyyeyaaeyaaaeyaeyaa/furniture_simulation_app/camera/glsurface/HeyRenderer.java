@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -18,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file.ObjDataFileHelper;
+import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
 import com.test.obj.ObjData;
 
 public class HeyRenderer implements Renderer, OnTouchListener
@@ -98,7 +100,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		
 		shapes = new Shape[shapeCount];
 		for(int i=0;i<shapeCount;i++){
-			LoadObjData loadObjData=new LoadObjData(context,dataFileName[i]);
+			ObjDataLoader loadObjData=new ObjDataLoader(context,dataFileName[i]);
 			ObjData objData=loadObjData.getObjData();
 			shapes[i]=new Shape(objData.getVertices(),objData.getTextures(),objData.getNormals(),objData.getIndices());
 		}

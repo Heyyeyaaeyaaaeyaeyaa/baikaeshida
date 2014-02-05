@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.set_obj_file_location;
 //DirectoryChooserDialog.java
 
 import java.io.File;

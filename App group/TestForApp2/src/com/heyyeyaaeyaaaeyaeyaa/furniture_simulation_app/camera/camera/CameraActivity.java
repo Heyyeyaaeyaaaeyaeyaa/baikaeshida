@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.camera;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,6 +47,12 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface.AngleManager;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface.HeyRenderer;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface.ObjSizeManager;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main.MainActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file.ChooseObjActivity;
 import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
 
 public class CameraActivity extends Activity {
@@ -91,7 +97,7 @@ public class CameraActivity extends Activity {
 	
 	private float[] accelerometer_values;
 	private float[] magnitude_values;
-	private float[] angle_rotation; //旋轉角度 有正�?�? 使用前請�?自行�?測數據變化
+	private float[] angle_rotation; //旋轉角度 有正??�???�? 使用前請�?自行�?測數據變化
 	private float[] rMtrix; //rotation matrix
 	
 	@Override
@@ -110,7 +116,7 @@ public class CameraActivity extends Activity {
 		
 		dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm); //
-		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this.getApplicationContext(), "手機螢?�? 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, Toast.LENGTH_SHORT).show();
 		
 		preview = new CameraPreview(this, dm);
 		preview.setLayoutParams(new RelativeLayout.LayoutParams(defaultPictureHeight, defaultPictureWidth));
@@ -161,7 +167,7 @@ public class CameraActivity extends Activity {
 				
 				//以下是取旋轉角度
 				//http://epaper.gotop.com.tw/pdf/AEL011000.pdf
-				//詳細請看方向感測器�?�?�?���?
+				//詳細請看方向感測器??�???�???�???�??�??�?
 				switch (event.sensor.getType()) { 
 					case Sensor.TYPE_ACCELEROMETER: 
 						accelerometer_values = (float[]) event.values.clone(); 
@@ -186,7 +192,7 @@ public class CameraActivity extends Activity {
 					for (int i = 0; i < angle_rotation.length; i++) {
 						angle_rotation[i] = (float) (angle_rotation[i]*180/Math.PI); // 轉換到 度數		
 						BigDecimal bd = new BigDecimal(angle_rotation[i]); 
-						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方�?
+						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方??�?
 						sensorInfo.append(" - 旋轉角度 [" + i + "] = " + angle_rotation[i] + "\n");
 					}
 					textView.setText(sensorInfo);
@@ -216,21 +222,21 @@ public class CameraActivity extends Activity {
 				
 				if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 	
-					if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直�?
+					if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直??�?
 						rotation = ROTATION_VERTICAL;
-						Toast.makeText(getApplicationContext(), "直立", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "直?�?", Toast.LENGTH_SHORT).show();
 					}
 					else if(values[0] > 9 && rotation != ROTATION_LEFT_HORIZONTAL){
 						rotation = ROTATION_LEFT_HORIZONTAL;
-						Toast.makeText(getApplicationContext(), "左旋轉 橫立", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "左旋�? 橫?�?", Toast.LENGTH_SHORT).show();
 					}
 					else if(values[0] < -9 && rotation != ROTATION_RIGHT_HORIZONTAL){
 						rotation = ROTATION_RIGHT_HORIZONTAL;
-						Toast.makeText(getApplicationContext(), "右旋轉 橫立", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "右旋�? 橫?�?", Toast.LENGTH_SHORT).show();
 					}
 					else if(values[1] < -9 && rotation != ROTATION_UPSIDE_DOWN){
 						rotation = ROTATION_UPSIDE_DOWN;
-						Toast.makeText(getApplicationContext(), "倒立", Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext(), "倒�?", Toast.LENGTH_SHORT).show();
 					}
 					
 					angleMgr.setAngleRotation(angle_rotation);
@@ -315,9 +321,9 @@ public class CameraActivity extends Activity {
 		  	LayoutInflater inflater = LayoutInflater.from(CameraActivity.this);
 			final View v = inflater.inflate(R.layout.camera_setting_foot, null);
 			new AlertDialog.Builder(CameraActivity.this)
-		    .setTitle("請輸入多少步�?��離")
+		    .setTitle("請輸入多少步??�???�??�離")
 		    .setView(v)
-		    .setPositiveButton("確�?", new DialogInterface.OnClickListener() {
+		    .setPositiveButton("確??�?", new DialogInterface.OnClickListener() {
 		        @Override
 		        public void onClick(DialogInterface dialog, int which) {                               
 		        	EditText editText = (EditText) (v.findViewById(R.id.camera_setting_foot_input));
@@ -373,7 +379,7 @@ public class CameraActivity extends Activity {
 	            return null;
 	        }
 	    }
-	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());//取得日期時�?	    
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());//取得日期時??�?	    
 	    File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 	        "AppCameraTest_IMG_"+ timeStamp + ".jpg");    
 	    return mediaFile;

@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.unused;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -30,7 +30,7 @@ public class ImageViewHelper {
 	private float dist = 1f;
 	private DisplayMetrics dm;
 	
-	public ImageViewHelper(DisplayMetrics dm, ImageView imageView, Bitmap bitmap){
+	private ImageViewHelper(DisplayMetrics dm, ImageView imageView, Bitmap bitmap){
 		this.dm = dm;
 		this.imageView = imageView;
 		this.bitmap = bitmap;

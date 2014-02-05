@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.set_obj_file_location;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -16,6 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main.MainActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
+import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
+
 public class ObjSiteActivity extends Activity {
 	private EditText TextInputObjSite;
 	private Button buttonBack, buttonApply,buttonSource;
@@ -31,8 +35,8 @@ public class ObjSiteActivity extends Activity {
 		//在當前的activity中註冊廣播
 		dirDBHelper = new DBHelper(this);
 		IntentFilter filter = new IntentFilter();  
-		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver�?���?個action?�即要監聽�?���?名�?  
-		registerReceiver(mBoradcastReceiver,filter); //動�?註冊監聽  靜�?�?�� 在AndroidManifest.xml中定義
+		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver?�??�?�?�?個action??�即要監聽?�??�?�?�?名�?  
+		registerReceiver(mBoradcastReceiver,filter); //動�?註冊監聽  靜�??�??�?� 在AndroidManifest.xml中定義
 		setContentView(R.layout.activity_obj_site);
 		
 		TextInputObjSite = (EditText)this.findViewById(R.id.obj_site_editText_input_site);
@@ -60,7 +64,7 @@ public class ObjSiteActivity extends Activity {
 				currentDir = TextInputObjSite.getText().toString();
                 updateDir(currentDir);
                 singleton.setObjLoadPath(currentDir);
-				/*把輸入的site丟�?�singleton裡面*/
+				/*把輸入的site丟�??�singleton裡面*/
 			}});
 		
 		buttonSource.setOnClickListener(new Button.OnClickListener(){
@@ -102,7 +106,7 @@ public class ObjSiteActivity extends Activity {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         
-        // 有選�?���?
+        // 有選?�??�?�?�?
         if ( resultCode == RESULT_OK )
         {
             // 取得檔案的 Uri
@@ -118,7 +122,7 @@ public class ObjSiteActivity extends Activity {
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
         @Override  
         public void onReceive(Context context, Intent intent) {  
-            if(intent.getAction().equals(MainActivity.BORADCAST_ACTION_EXIT)){//發�?��閉action�?��播  
+            if(intent.getAction().equals(MainActivity.BORADCAST_ACTION_EXIT)){//發?�??�?�閉action?�??�?�播  
                 finish();  
             }  
         }  

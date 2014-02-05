@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,6 +13,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.about.AboutActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file.ChooseObjActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.set_obj_file_location.DBHelper;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.set_obj_file_location.ObjSiteActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
 import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
 
 public class MainActivity extends Activity {
@@ -28,8 +34,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//在當前的activity中註冊廣播
 		IntentFilter filter = new IntentFilter();  
-        filter.addAction(BORADCAST_ACTION_EXIT);//爲BroadcastReceiver�?���?個action?�即要監聽�?���?名�?  
-        registerReceiver(mBoradcastReceiver,filter); //動�?註冊監聽  靜�?�?�� 在AndroidManifest.xml中定義
+        filter.addAction(BORADCAST_ACTION_EXIT);//爲BroadcastReceiver?�??�?�?�?個action??�即要監聽?�??�?�?�?名�?  
+        registerReceiver(mBoradcastReceiver,filter); //動�?註冊監聽  靜�??�??�?� 在AndroidManifest.xml中定義
 		
 		setContentView(R.layout.activity_main);
 
@@ -80,7 +86,7 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {   
                         Intent intent = new Intent();  
                         intent.setAction(BORADCAST_ACTION_EXIT);  
-                        sendBroadcast(intent);//發�???出系統廣播  每�?�接收器都�?��到 調動finish()關閉activity  
+                        sendBroadcast(intent);//發?�???出系統廣播  每�??�接收器都?�??�?�到 調動finish()關閉activity  
                         finish();  
                     }  
                 });
@@ -98,7 +104,7 @@ public class MainActivity extends Activity {
                                         public void onClick(DialogInterface dialog, int which) {   
                                             Intent intent = new Intent();  
                                             intent.setAction(BORADCAST_ACTION_EXIT);  
-                                            sendBroadcast(intent);//發�???出系統廣播  每�?�接收器都�?��到 調動finish()關閉activity
+                                            sendBroadcast(intent);//發?�???出系統廣播  每�??�接收器都?�??�?�到 調動finish()關閉activity
                                             finish();  
                                         }  
                                     })  
@@ -109,7 +115,7 @@ public class MainActivity extends Activity {
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
         @Override  
         public void onReceive(Context context, Intent intent) {  
-            if(intent.getAction().equals(BORADCAST_ACTION_EXIT)){//發来關閉action�?��播  
+            if(intent.getAction().equals(BORADCAST_ACTION_EXIT)){//發来關閉action?�??�?�播  
                 finish();  
             }  
         }  
