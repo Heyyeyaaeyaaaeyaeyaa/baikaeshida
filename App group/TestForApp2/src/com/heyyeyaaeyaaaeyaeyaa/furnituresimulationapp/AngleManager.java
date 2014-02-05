@@ -1,14 +1,12 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
 
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 
 
 public class AngleManager {
 	
 	private float[] value;
 	private float[] angle_rotation;
-	private int orientation; //¤â¾÷¤è¦V
+	private int orientation; //¤â¾?¤è¦V
 
 	private float angle; //¨¤«×
 	
@@ -65,6 +63,7 @@ public class AngleManager {
 			angle = 0;
 	}
 	
+	@SuppressWarnings("unused")
 	private void computeAngleOfRotationDirection(){
 		
 	}

@@ -1,11 +1,10 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +47,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
 
 public class CameraActivity extends Activity {
 	
@@ -59,7 +59,7 @@ public class CameraActivity extends Activity {
 	private BroadcastReceiver mBoradcastReceiver;
 	private Camera camera;
 	private CameraPreview preview;
-	private Singleton singleton;
+//	private Singleton singleton;
 	private HeyRenderer heyRenderer;
 	private DisplayMetrics dm;
 	private GLSurfaceView glSurfaceView;
@@ -70,7 +70,7 @@ public class CameraActivity extends Activity {
 	private String DAVIDTAG = "David";
 	private float focalLength;
 	private int foot;
-	private double magnification;
+//	private double magnification;
 	private int rotation;
 	private final int ROTATION_VERTICAL = 0;
 	private final int ROTATION_LEFT_HORIZONTAL = 1;
@@ -83,15 +83,15 @@ public class CameraActivity extends Activity {
 	
 	private boolean takePictureClick = false;
 	private AngleManager angleMgr;
-	private float angle = 0;
+//	private float angle = 0;
 	private float angleX = 0;
 	private float angleY = 0;
 	private float angleZ = 0;
-	private float newAngle = 0;
+//	private float newAngle = 0;
 	
 	private float[] accelerometer_values;
 	private float[] magnitude_values;
-	private float[] angle_rotation; //旋轉角度 有正負號 使用前請先自行觀測數據變化
+	private float[] angle_rotation; //旋轉角度 有正�?�? 使用前請�?自行�?測數據變化
 	private float[] rMtrix; //rotation matrix
 	
 	@Override
@@ -109,7 +109,7 @@ public class CameraActivity extends Activity {
 		frameLayout = (FrameLayout)this.findViewById(R.id.camera_frameLayout);
 		
 		dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm); //取得螢幕資訊
+		getWindowManager().getDefaultDisplay().getMetrics(dm); //
 		Toast.makeText(this.getApplicationContext(), "手機螢幕 高度:"+dm.heightPixels+" 寬度:"+dm.widthPixels, Toast.LENGTH_SHORT).show();
 		
 		preview = new CameraPreview(this, dm);
@@ -161,7 +161,7 @@ public class CameraActivity extends Activity {
 				
 				//以下是取旋轉角度
 				//http://epaper.gotop.com.tw/pdf/AEL011000.pdf
-				//詳細請看方向感測器章節的說明
+				//詳細請看方向感測器�?�?�?���?
 				switch (event.sensor.getType()) { 
 					case Sensor.TYPE_ACCELEROMETER: 
 						accelerometer_values = (float[]) event.values.clone(); 
@@ -186,7 +186,7 @@ public class CameraActivity extends Activity {
 					for (int i = 0; i < angle_rotation.length; i++) {
 						angle_rotation[i] = (float) (angle_rotation[i]*180/Math.PI); // 轉換到 度數		
 						BigDecimal bd = new BigDecimal(angle_rotation[i]); 
-						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方法
+						angle_rotation[i] = bd.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue(); //4捨5入到小數點第1位的方�?
 						sensorInfo.append(" - 旋轉角度 [" + i + "] = " + angle_rotation[i] + "\n");
 					}
 					textView.setText(sensorInfo);
@@ -196,29 +196,27 @@ public class CameraActivity extends Activity {
 					
 					
 					
-					if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-					
-						float value[] = event.values;
-						if(angle_rotation[1] < 0 && angle_rotation[1] > -90){
-							newAngle = Math.abs(angle_rotation[1]);
-						}
-
-						if(value[2] < 0)
-							newAngle = 90;
-						else if(value[1] < 0)
-							newAngle = 0;	
-					}
+//					if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+//					
+//						float value[] = event.values;
+//						if(angle_rotation[1] < 0 && angle_rotation[1] > -90){
+//							newAngle = Math.abs(angle_rotation[1]);
+//						}
+//
+//						if(value[2] < 0)
+//							newAngle = 90;
+//						else if(value[1] < 0)
+//							newAngle = 0;	
+//					}
 		
 				} 
-				//以上是取旋轉角度
-					
-				Sensor sensor = event.sensor;
+				//以上是取旋轉角度			
 				float[] values = event.values;
 				int rotationState = (values[2] >= 0) ? ROTATION_VERTICAL : ROTATION_UPSIDE_DOWN;
 				
 				if( event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 	
-					if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直立
+					if(values[1] > 9 && rotation != ROTATION_VERTICAL){ //直�?
 						rotation = ROTATION_VERTICAL;
 						Toast.makeText(getApplicationContext(), "直立", Toast.LENGTH_SHORT).show();
 					}
@@ -234,7 +232,6 @@ public class CameraActivity extends Activity {
 						rotation = ROTATION_UPSIDE_DOWN;
 						Toast.makeText(getApplicationContext(), "倒立", Toast.LENGTH_SHORT).show();
 					}
-					//取手機俯角 的角度
 					
 					angleMgr.setAngleRotation(angle_rotation);
 					angleMgr.setValue(values);
@@ -254,7 +251,7 @@ public class CameraActivity extends Activity {
 					//boolean condition2 = (angleX<=65 && angleX>=-65)&&deltaAngle>4;
 					if(deltaAngle>2){
 						Log.e("Log",deltaAngle+"");
-						float height = 500;
+//						float height = 500;
 						focalLength = camera.getParameters().getFocalLength();
 //						if(rotation==ROTATION_LEFT_HORIZONTAL||rotation==ROTATION_RIGHT_HORIZONTAL)
 //							osm.changeObjSizeByDistance(focalLength,angleY, height);
@@ -318,9 +315,9 @@ public class CameraActivity extends Activity {
 		  	LayoutInflater inflater = LayoutInflater.from(CameraActivity.this);
 			final View v = inflater.inflate(R.layout.camera_setting_foot, null);
 			new AlertDialog.Builder(CameraActivity.this)
-		    .setTitle("請輸入多少步的距離")
+		    .setTitle("請輸入多少步�?��離")
 		    .setView(v)
-		    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+		    .setPositiveButton("確�?", new DialogInterface.OnClickListener() {
 		        @Override
 		        public void onClick(DialogInterface dialog, int which) {                               
 		        	EditText editText = (EditText) (v.findViewById(R.id.camera_setting_foot_input));
@@ -376,7 +373,7 @@ public class CameraActivity extends Activity {
 	            return null;
 	        }
 	    }
-	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());//取得日期時間	    
+	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());//取得日期時�?	    
 	    File mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 	        "AppCameraTest_IMG_"+ timeStamp + ".jpg");    
 	    return mediaFile;

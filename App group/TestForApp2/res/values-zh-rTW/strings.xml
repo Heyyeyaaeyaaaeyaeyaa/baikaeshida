@@ -1,0 +1,23 @@
+<resources>
+
+    <string name="action_settings">設定</string>
+    <string name="app_name">傢俱模擬</string>
+    <string name="button_about">關於</string>
+    <string name="button_apply">套用</string>
+    <string name="button_back">返回</string>
+    <string name="button_capture">拍照</string>
+    <string name="button_exit">結束</string>
+    <string name="button_focus">對焦</string>
+    <string name="button_obj_site">3D模型檔案位置</string>
+    <string name="button_select">選擇</string>
+    <string name="button_start">開始</string>
+    <string name="text_verson">版本:1.1</string>
+    <string name="title">傢俱模擬相機</string>
+    <string name="title_activity_about">關於</string>
+    <string name="title_activity_camera">相機</string>
+    <string name="title_activity_choose_obj">選擇3D模型</string>
+    <string name="title_activity_obj_site">3D模型檔案位置</string>
+    <string name="title_choose_the_furniture_object">選擇傢俱的3D模型</string>
+    <string name="title_input_the_obj_site">設定3D模型檔案位置</string>
+
+</resources>

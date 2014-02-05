@@ -1,4 +1,4 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -18,11 +18,11 @@ public class ImageViewHelper {
 	private Matrix savedMatrix = new Matrix();
 	private Bitmap bitmap;
 
-	private float minScaleR;// ³Ì¤pÁY©ñ¤ñ¨Ò
+	private float minScaleR;// ³Ì¤pÁY©?¤?¨Ò
 
-	private static final int NONE = 0;// ªì©lª¬ºA
-	private static final int DRAG = 1;// ©ì¦²ª¬ºA
-	private static final int ZOOM = 2;// ÁY©ñª¬ºA
+	private static final int NONE = 0;// ª?lª¬ºA
+	private static final int DRAG = 1;// ©?²ª¬ºA
+	private static final int ZOOM = 2;// ÁY©?ª¬ºA
 	private int mode = NONE;
 
 	private PointF prev = new PointF();
@@ -44,10 +44,10 @@ public class ImageViewHelper {
 		return matrix;
 	}
 
-    //¨ú±o³Ì¤pªº¤ñ¨Ò, °²³]¹Ï¤ù¤ñ¿Ã¹õ¤j
-    //«h¿Ã¹õ(¼e/ªø)/¹Ï¤ù(¼e/ªø)·|¤p©ó1 ¨º»ò¤]´N¬O±N¹Ï¤ù¶i¦æÁY¤p
-    //¤Ï¤§ «h¶i¦æ©ñ¤j ¦Ó¹Ï¤ù¶V¤p ©ñ¤j­¿¼Æ«h·|¶V¤j
-    //¦pªG¿Ã¹õ¸ò¹Ï¤ù¤j¤p¬Û¦P «h­¿¼Æ·|¬°1 §Y¤£ÅÜ
+    //¨?±o³Ì¤pªº¤?¨Ò, °²³]¹Ï¤?¤?¿Ã¹?¤j
+    //«h¿Ã¹?(¼e/ª?)/¹Ï¤?(¼e/ª?)·|¤p©?1 ¨º»?¤]´N¬O±N¹Ï¤?¶i¦æÁY¤p
+    //¤Ï¤§ «h¶i¦æ©?¤j ¦Ó¹Ï¤?¶V¤p ©?¤j­¿¼Æ«h·|¶V¤j
+    //¦pªG¿Ã¹?¸?¹Ï¤?¤j¤p¬Û¦P «h­¿¼Æ·|¬°1 §Y¤£ÅÜ
 	public void minZoom() {
         minScaleR = Math.min(
                 (float) dm.widthPixels / (float) bitmap.getWidth(),
@@ -64,7 +64,7 @@ public class ImageViewHelper {
         center(true, true);
     }
 
-    //¾î¦V¡BÁa¦V¸m¤¤
+    //¾?V¡BÁa¦V¸m¤¤
     public void center(boolean horizontal, boolean vertical) {
 
         Matrix m = new Matrix();
@@ -78,8 +78,8 @@ public class ImageViewHelper {
         float deltaX = 0, deltaY = 0;
 
         if (vertical) {
-        	// ¹Ï¤ù¤p©ó¿Ã¹õ¤j¤p¡A«h¸m¤¤Åã¥Ü¡C
-        	//¤j©ó¿Ã¹õ¡A¤W¤è«h¯dªÅ¥Õ«h©¹¤W²¾¡A¤U¤è¯dªÅ¥Õ«h©¹¤U²¾
+        	// ¹Ï¤?¤p©?¿Ã¹?¤j¤p¡A«h¸m¤¤Åã¥Ü¡C
+        	//¤j©?¿Ã¹?¡A¤W¤è«h¯dªÅ¥Õ«h©¹¤W²¾¡A¤U¤è¯dªÅ¥Õ«h©¹¤U²¾
             int screenHeight = dm.heightPixels;
        
             if (height < screenHeight) {
@@ -104,7 +104,7 @@ public class ImageViewHelper {
         matrix.postTranslate(deltaX, deltaY);
     }
 
-    //¨âÂIªº¶ZÂ÷
+    //¨âÂIªº¶ZÂ?
     public float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
@@ -117,7 +117,7 @@ public class ImageViewHelper {
         float y = event.getY(0) + event.getY(1);
         point.set(x / 2, y / 2);
     }
-    //«Ø¥ß¹Ï¤ù²¾°ÊÁY©ñ¨Æ¥ó 
+    //«Ø¥ß¹Ï¤?²¾°ÊÁY©?¨Æ¥? 
     public void setImageSize(){
 
 		
@@ -135,7 +135,7 @@ public class ImageViewHelper {
 
 		        case MotionEvent.ACTION_POINTER_DOWN:
 		            dist = spacing(event);
-		            // ¦pªG¨âÂI¶ZÂ÷¶W¹L10, ´N§PÂ_¬°¦hÂIÄ²±±¼Ò¦¡ §Y¬°ÁY©ñ¼Ò¦¡
+		            // ¦pªG¨âÂI¶ZÂ?¶W¹L10, ´N§PÂ_¬°¦hÂIÄ²±±¼Ò¦¡ §Y¬°ÁY©?¼Ò¦¡
 		            if (spacing(event) > 10f) {
 		                savedMatrix.set(matrix);
 		                midPoint(mid, event);
@@ -152,7 +152,7 @@ public class ImageViewHelper {
 		                matrix.postTranslate(event.getX() - prev.x, event.getY()
 		                        - prev.y);
 		            } else if (mode == ZOOM) {
-		                float newDist = spacing(event);//°»´ú¨â®Ú¤â«ü²¾°Êªº¶ZÂ÷
+		                float newDist = spacing(event);//°»´?¨â®Ú¤â«?²¾°Êªº¶ZÂ?
 		                if (newDist > 10f) {
 		                    matrix.set(savedMatrix);
 		                    float tScale = newDist / dist;

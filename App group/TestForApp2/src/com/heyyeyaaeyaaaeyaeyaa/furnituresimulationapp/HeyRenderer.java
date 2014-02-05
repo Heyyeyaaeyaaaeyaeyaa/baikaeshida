@@ -1,4 +1,4 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -8,12 +8,8 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.test.obj.ObjData;
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.opengl.GLException;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
@@ -21,6 +17,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+
+import com.test.obj.ObjData;
 
 public class HeyRenderer implements Renderer, OnTouchListener
 {

@@ -1,4 +1,4 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
 
 import android.util.Log;
 

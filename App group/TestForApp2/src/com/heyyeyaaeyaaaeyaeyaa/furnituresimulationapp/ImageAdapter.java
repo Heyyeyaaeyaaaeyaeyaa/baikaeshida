@@ -1,4 +1,4 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -6,14 +6,13 @@ import java.io.FilenameFilter;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
+@SuppressWarnings("deprecation")
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
 	private Singleton singleton = Singleton.getSharedInstance();
