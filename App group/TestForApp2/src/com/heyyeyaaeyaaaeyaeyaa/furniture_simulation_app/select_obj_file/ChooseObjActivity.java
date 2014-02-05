@@ -1,6 +1,6 @@
 package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file;
 
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.camera.CameraActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.CameraActivity;
 import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main.MainActivity;
 import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
 import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
