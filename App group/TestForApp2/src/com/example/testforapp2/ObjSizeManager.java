@@ -64,4 +64,10 @@ public class ObjSizeManager {
 		heyRenderer.rotateObj(angleX,angleY,angleZ,rotationState);
 		
 	}
+
+	public void moveObj(float ymove, float xmove, int rotationState) {
+		// TODO Auto-generated method stub
+		heyRenderer.moveObj(ymove, xmove, rotationState);
+		
+	}
 }

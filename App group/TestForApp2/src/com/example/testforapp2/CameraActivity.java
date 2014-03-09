@@ -94,6 +94,12 @@ public class CameraActivity extends Activity {
 	private float[] angle_rotation; //旋轉角度 有正負號 使用前請先自行觀測數據變化
 	private float[] rMtrix; //rotation matrix
 	
+	//給根據角度移動OBJ使用的變數
+	float preRotation1 = 0;
+	float preRotation2 = 0;
+	float firstRotation1 = 0;
+	float firstRotation2 = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -247,6 +253,44 @@ public class CameraActivity extends Activity {
 						  deltaAngle += Math.abs(angleY-newAngleY);
 					float newAngleZ = angle_rotation[0];
 						  //deltaAngle += Math.abs(angleZ-newAngleZ);
+					
+					
+					
+					//y 向前旋轉 deltaAngleY會是正數 OBJ要往上跑
+					
+					angle_rotation[1] = (int)angle_rotation[1];
+					angle_rotation[2] = (int)angle_rotation[2];
+					
+					if(firstRotation1 == 0 && firstRotation2 == 0){//初使畫
+						firstRotation1 = angle_rotation[1];
+						firstRotation2 = angle_rotation[2];
+						preRotation1 = angle_rotation[1];
+						preRotation2 = angle_rotation[2];
+					}else{
+						
+						float deltaRotation1 = angle_rotation[1] - firstRotation1; //Y座標
+						float deltaRotation2 = angle_rotation[2] - firstRotation2; //X座標
+						
+						if(Math.abs(preRotation1 - angle_rotation[1]) > 1 || Math.abs(preRotation2 - angle_rotation[2]) > 1){//靈敏度
+						
+						deltaRotation2 = (float) (deltaRotation2)/10; //X
+						deltaRotation1 = (float) (0 - deltaRotation1)/7; //Y
+						
+						osm.moveObj(deltaRotation1, deltaRotation2, rotationState);//Y, X
+						}
+						
+						preRotation1 = angle_rotation[1];
+						preRotation2 = angle_rotation[2];
+
+					}
+						
+						
+					
+					
+					
+					
+					
+					
 					angleX = newAngleX;
 					angleY = newAngleY;
 					angleZ = newAngleZ;
@@ -260,8 +304,9 @@ public class CameraActivity extends Activity {
 //							osm.changeObjSizeByDistance(focalLength,angleY, height);
 //						else
 //							osm.changeObjSizeByDistance(focalLength,angleX, height);
-						osm.rotateObj(angleX,angleY,angleZ,rotationState);
+						//osm.rotateObj(angleX,angleY,angleZ,rotationState);
 					}
+					
 					
 				}
 				

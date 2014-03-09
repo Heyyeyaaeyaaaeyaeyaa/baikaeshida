@@ -36,8 +36,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
 	private float xrot;					//X Rotation
 	private float yrot;					//Y Rotation
 	private float zrot;					//Z Rotation
-	private float xmove;
-	private float ymove;
+	private float xmove=0;
+	private float ymove=0;
 	private float zmove;
 	private float currentSize;
 	private int lock = 0;
@@ -174,6 +174,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		gl.glLoadIdentity(); 					//Reset The Modelview Matrix
 
 	}
+	float tempMovex = 0;
+    float tempMovey = 0;
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
@@ -185,6 +187,8 @@ public class HeyRenderer implements Renderer, OnTouchListener
         switch(event.getAction() ) 
         {
         	case MotionEvent.ACTION_DOWN:
+        		tempMovex = event.getX(0);
+        		tempMovey = event.getY(0);
         		break;
         	case MotionEvent.ACTION_MOVE:
         		float dx = x - oldX;
@@ -217,6 +221,10 @@ public class HeyRenderer implements Renderer, OnTouchListener
         		break;
         	case MotionEvent.ACTION_UP:
         		lock = 0;
+        		tempMovex = event.getX(0) - tempMovex;
+        		tempMovey = event.getY(0) - tempMovey;
+        		Log.i("tempMovex", "tempMovex====="+tempMovex);
+        		Log.i("tempMovey", "tempMovey====="+tempMovey);
         		break;
         }
         if(event.getPointerCount()==2)
@@ -295,5 +303,12 @@ public class HeyRenderer implements Renderer, OnTouchListener
 			yrot = (float) (-angleY);
 			zrot = (float) (angleZ);
 		}
+	}
+	public void moveObj(float y, float x, int rotationState) {
+		// TODO Auto-generated method stub
+
+		this.ymove = y;
+		this.xmove = x;
+		
 	}
 }
