@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 public class ObjData implements Serializable
 {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6244395282907135167L;
 	private float[] vertices;
 	private float[] textures;
 	private float[] normals;

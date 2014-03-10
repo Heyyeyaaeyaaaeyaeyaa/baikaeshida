@@ -1,17 +1,14 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.set_obj_file_location;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper{
 	private final static int DBVERSION = 1;
-	private final static String DB_NAME = "TestForApp.db";
+	private final static String DB_NAME = "FurnitureSimulationApp.db";
 	private final static String TABLE_NAME = "directory";
-	private final static String FIELD_NAME1 = "_id";
-	private final static String FIELD_NAME2 = "directory_path";
+	private final static String FIELD_NAME = "directory_path";
 	public DBHelper(Context context) {
 		super(context, DB_NAME, null, DBVERSION);
 	}
@@ -38,7 +35,7 @@ public class DBHelper extends SQLiteOpenHelper{
 	}
 
 	public String getFieldName2() {
-		return FIELD_NAME2;
+		return FIELD_NAME;
 	}
 
 }
