@@ -1,4 +1,4 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.set_obj_file_location;
 //DirectoryChooserDialog.java
 
 import java.io.File;
@@ -220,6 +220,7 @@ private List<String> getDirectories(String dir)
  return dirs;
 }
 
+
 private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems,
      DialogInterface.OnClickListener onClickListener)
 {
@@ -232,14 +233,14 @@ private AlertDialog.Builder createDirectoryChooserDialog(String title, List<Stri
  titleLayout.setOrientation(LinearLayout.VERTICAL);
 
  m_titleView = new TextView(m_context);
- m_titleView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+ m_titleView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
  m_titleView.setTextAppearance(m_context, android.R.style.TextAppearance_Large);
  m_titleView.setTextColor( m_context.getResources().getColor(android.R.color.white) );
  m_titleView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
  m_titleView.setText(title);
 
  Button newDirButton = new Button(m_context);
- newDirButton.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+ newDirButton.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
  newDirButton.setText("New folder");
  newDirButton.setOnClickListener(new View.OnClickListener() 
  {

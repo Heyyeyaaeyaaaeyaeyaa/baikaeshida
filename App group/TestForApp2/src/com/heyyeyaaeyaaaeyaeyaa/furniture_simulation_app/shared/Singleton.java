@@ -1,4 +1,4 @@
-package com.example.testforapp2;
+package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared;
 
 public class Singleton {
 	
@@ -10,7 +10,7 @@ public class Singleton {
     private String choosenObjImageFileName;
 	/*************************/
     
-    private Singleton(){//私有 不給他人宣告
+    private Singleton(){//私有 不給他人宣�?
         super();
     }
     public static Singleton getSharedInstance(){
