@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface;
+package com.example.testforapp2;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,17 +30,17 @@ public class Shape
 	/** Our texture pointer */
 	private int[] textures = new int[1];
 	
-//	private float[] vertices;
-//	private float[] texture;
-//	private float[] normals;
+	private float[] vertices;
+	private float[] texture;
+	private float[] normals;
 	private short[] indices;
 	
 	public Shape(float[] vertices,float[] texture,float[] normals,short[] indices)
 	{
-//		this.vertices=vertices;
-//		this.texture=texture;
+		this.vertices=vertices;
+		this.texture=texture;
 		this.indices=indices;	
-//		this.normals=normals;
+		this.normals=normals;
 		Log.v("TEST", "texture:"+Arrays.toString(texture));
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
 		byteBuf.order(ByteOrder.nativeOrder());

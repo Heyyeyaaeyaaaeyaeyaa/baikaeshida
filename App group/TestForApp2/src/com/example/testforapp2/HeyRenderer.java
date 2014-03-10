@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface;
+package com.example.testforapp2;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -8,8 +8,12 @@ import java.nio.IntBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.test.obj.ObjData;
+
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.opengl.GLException;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
@@ -17,10 +21,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file.ObjDataFileHelper;
-import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
-import com.test.obj.ObjData;
 
 public class HeyRenderer implements Renderer, OnTouchListener
 {
@@ -100,7 +100,7 @@ public class HeyRenderer implements Renderer, OnTouchListener
 		
 		shapes = new Shape[shapeCount];
 		for(int i=0;i<shapeCount;i++){
-			ObjDataLoader loadObjData=new ObjDataLoader(context,dataFileName[i]);
+			LoadObjData loadObjData=new LoadObjData(context,dataFileName[i]);
 			ObjData objData=loadObjData.getObjData();
 			shapes[i]=new Shape(objData.getVertices(),objData.getTextures(),objData.getNormals(),objData.getIndices());
 		}

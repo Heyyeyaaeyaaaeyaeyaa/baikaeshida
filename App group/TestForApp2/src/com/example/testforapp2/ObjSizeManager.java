@@ -1,4 +1,4 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface;
+package com.example.testforapp2;
 
 import android.util.Log;
 

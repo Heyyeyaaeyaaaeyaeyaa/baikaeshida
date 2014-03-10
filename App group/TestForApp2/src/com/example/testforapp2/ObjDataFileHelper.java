@@ -1,10 +1,8 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file;
+package com.example.testforapp2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
 
 import android.util.Log;
 

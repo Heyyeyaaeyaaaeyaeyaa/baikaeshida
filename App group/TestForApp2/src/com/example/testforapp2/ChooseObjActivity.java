@@ -1,16 +1,11 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file;
+package com.example.testforapp2;
 
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.CameraActivity;
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main.MainActivity;
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
-import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
-
+import android.os.Bundle;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -23,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher.ViewFactory;
 
-@SuppressWarnings("deprecation")
 public class ChooseObjActivity extends Activity {
 	private Button buttonBack, buttonSelect;
 	private ImageAdapter imgAdapter = null;
@@ -36,8 +30,8 @@ public class ChooseObjActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		//在當前的activity中註冊廣播
 		IntentFilter filter = new IntentFilter();  
-		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver?�??�?�?�?個action??�即要監聽?�??�?�?�?名�?  
-		registerReceiver(mBoradcastReceiver,filter); //動�?註冊監聽  靜�??�??�?� 在AndroidManifest.xml中定義
+		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver指定一個action，即要監聽的消息名字  
+		registerReceiver(mBoradcastReceiver,filter); //動態註冊監聽  靜態的話 在AndroidManifest.xml中定義
 		setContentView(R.layout.activity_choose_obj);
 		
 		gallery = (Gallery) findViewById(R.id.gallery);  
@@ -49,7 +43,7 @@ public class ChooseObjActivity extends Activity {
             public View makeView() {  
                 // TODO Auto-generated method stub  
                 ImageView i = new ImageView(ChooseObjActivity.this);  
-                // 把圖?�??�?�比例擴大/縮小到View?�??�?�度??�置中顯示  
+                // 把圖片按比例擴大/縮小到View的寬度，置中顯示  
                 i.setScaleType(ImageView.ScaleType.FIT_CENTER);  
                 i.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,  
                         LayoutParams.MATCH_PARENT));  
@@ -57,22 +51,22 @@ public class ChooseObjActivity extends Activity {
             }  
         });
         
-        // 設置點擊圖片?�??�?�聽事件??��?要用手點擊才觸發??�滑動時不觸發?? 
+        // 設置點擊圖片的監聽事件（需要用手點擊才觸發，滑動時不觸發） 
         gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {  
             @Override  
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  
-                Toast.makeText(ChooseObjActivity.this, "點擊圖片 " + (position + 1), Toast.LENGTH_SHORT).show();  
+                Toast.makeText(ChooseObjActivity.this, "點擊圖片 " + (position + 1), 100).show();  
             }  
         });          
         
-        // 設置選中圖片?�??�?�聽事件??�當圖片滑到螢幕正中??��?��為自動選中??  
+        // 設置選中圖片的監聽事件（當圖片滑到螢幕正中，則視為自動選中）  
         gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  
             @Override  
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {   
                 if(imgAdapter.getImage() != null){
         			imageSwitcher.setImageURI(imgAdapter.getImage()[position % imgAdapter.getImage().length]);
         			singleton.setChoosenObjImageFileName(imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment());
-                    Toast.makeText(ChooseObjActivity.this, "選中圖片 " + imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment(), Toast.LENGTH_SHORT).show(); 
+                    Toast.makeText(ChooseObjActivity.this, "選中圖片 " + imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment(), 20).show(); 
                 }else
         			imageSwitcher.setImageResource(imgAdapter.getImgs()[position % imgAdapter.getImgs().length]);
             }  
@@ -83,10 +77,10 @@ public class ChooseObjActivity extends Activity {
             }  
         });        
         
-        gallery.setUnselectedAlpha(0.3f);                   // 設置未選中圖片?�???�?�?度  
+        gallery.setUnselectedAlpha(0.3f);                   // 設置未選中圖片的透明度  
         gallery.setSpacing(40); 
 		
-        gallery.setAdapter(imgAdapter);                     // 設置圖片?�??�?  
+        gallery.setAdapter(imgAdapter);                     // 設置圖片資源  
         gallery.setGravity(Gravity.CENTER_HORIZONTAL);      // 設置水平置中顯示  
         gallery.setSelection(imgAdapter.imgs.length * 100);
         
@@ -108,7 +102,7 @@ public class ChooseObjActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				/*選?�??�?�要使用?�??�?�具OBJ??�要把他告訴給下�?個CameraActivity知?�?*/
+				/*選擇好要使用的家具OBJ，要把他告訴給下一個CameraActivity知道*/
 				
 				Intent intent = new Intent();
 				intent.setClass(ChooseObjActivity.this, CameraActivity.class);
@@ -119,7 +113,7 @@ public class ChooseObjActivity extends Activity {
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
         @Override  
         public void onReceive(Context context, Intent intent) {  
-            if(intent.getAction().equals(MainActivity.BORADCAST_ACTION_EXIT)){//發?�??�?�閉action?�??�?�播  
+            if(intent.getAction().equals(MainActivity.BORADCAST_ACTION_EXIT)){//發來關閉action的廣播  
                 finish();  
             }  
         }  

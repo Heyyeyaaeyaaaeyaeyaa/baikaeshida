@@ -1,21 +1,19 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file;
+package com.example.testforapp2;
 
 import java.io.File;
 import java.io.FilenameFilter;
 
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
-import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
-@SuppressWarnings("deprecation")
 public class ImageAdapter extends BaseAdapter {
 	private Context mContext;
 	private Singleton singleton = Singleton.getSharedInstance();

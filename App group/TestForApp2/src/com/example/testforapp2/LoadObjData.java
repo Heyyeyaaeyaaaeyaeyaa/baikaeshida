@@ -1,23 +1,21 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.glsurface;
+package com.example.testforapp2;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
-
+import com.test.obj.ObjData;
 import android.content.Context;
 import android.util.Log;
 
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
-import com.test.obj.ObjData;
-
-public class ObjDataLoader
+public class LoadObjData
 {
 	private Singleton singleton = Singleton.getSharedInstance();
 	private ObjData objData;
 	private File dataFile;
-	public ObjDataLoader(Context context,String fileName)
+	public LoadObjData(Context context,String fileName)
 	{
 		ObjectInputStream objIn=null;
 		objData=null;

@@ -1,9 +1,10 @@
-package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera;
+package com.example.testforapp2;
 
 import java.io.IOException;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.AutoFocusCallback;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -13,10 +14,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	private SurfaceHolder holder;
 	private Camera camera;
 	private final String TAG = "Preview";
-//	private DisplayMetrics dm;
-//	private float focalLength;
+	private DisplayMetrics dm;
+	private float focalLength;
 	
-	@SuppressWarnings("deprecation")
 	public CameraPreview(Context context, DisplayMetrics dm) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -24,7 +24,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 		this.holder = this.getHolder();
 		this.holder.addCallback(this);
 		this.holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-//		this.dm = dm;
+		this.dm = dm;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// TODO Auto-generated catch block
 			Log.e(TAG, "IOException caused by setPreviewDisplay()", e);
 		}
-		camera.setDisplayOrientation(90);//????½e????½????½????½????½????½????½???½????½????½???½????½???½??½90????½??
+		camera.setDisplayOrientation(90);//ï½µeï½­ï½±ï½¶ï½¶ï½®ï¾‰ï¾„ï¾ï½±ï¾›ï¾‚ï¿½90ï½«ï¾—
 		camera.startPreview();
 	}
 
