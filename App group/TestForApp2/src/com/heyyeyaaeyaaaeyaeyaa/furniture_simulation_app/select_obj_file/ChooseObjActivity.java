@@ -1,94 +1,58 @@
 package com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.select_obj_file;
 
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.CameraActivity;
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main.MainActivity;
-import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
-import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
+import java.io.File;
+import java.io.FilenameFilter;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Gallery;
-import android.widget.Gallery.LayoutParams;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 import android.widget.ViewSwitcher.ViewFactory;
 
-@SuppressWarnings("deprecation")
-public class ChooseObjActivity extends Activity {
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.camera.CameraActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.main.MainActivity;
+import com.heyyeyaaeyaaaeyaeyaa.furniture_simulation_app.shared.Singleton;
+import com.heyyeyaaeyaaaeyaeyaa.furnituresimulationapp.R;
+
+public class ChooseObjActivity extends Activity implements ViewFactory{
 	private Button buttonBack, buttonSelect;
-	private ImageAdapter imgAdapter = null;
-	private Gallery gallery = null;
+	private final int IMAGE_ITEM_SIZE = 300;
+	private LinearLayout HSVLayout;
 	private Singleton singleton = Singleton.getSharedInstance();
 	private ImageSwitcher imageSwitcher;
+	
+	private Integer[] imgs = {R.drawable.img1 , R.drawable.img2 , R.drawable.img3 ,
+			R.drawable.img4 , R.drawable.img5};
+	
+	private final String IMAGE_DIR = "/ObjPreview";
+	private Uri[] mUris;
+	private String[] mFiles = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//在當前的activity中註冊廣播
 		IntentFilter filter = new IntentFilter();  
-		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);//爲BroadcastReceiver?�??�?�?�?個action??�即要監聽?�??�?�?�?名�?  
-		registerReceiver(mBoradcastReceiver,filter); //動�?註冊監聽  靜�??�??�?� 在AndroidManifest.xml中定義
+		filter.addAction(MainActivity.BORADCAST_ACTION_EXIT);
+		registerReceiver(mBoradcastReceiver,filter); 
 		setContentView(R.layout.activity_choose_obj);
 		
-		gallery = (Gallery) findViewById(R.id.gallery);  
-        imgAdapter = new ImageAdapter(this);  
+		HSVLayout = (LinearLayout)findViewById(R.id.HSVLayout);
+
         imageSwitcher = (ImageSwitcher)findViewById(R.id.imageSwitcher);
+        imageSwitcher.setFactory(this);
         
-        imageSwitcher.setFactory(new ViewFactory() {  
-            @Override  
-            public View makeView() {  
-                // TODO Auto-generated method stub  
-                ImageView i = new ImageView(ChooseObjActivity.this);  
-                // 把圖?�??�?�比例擴大/縮小到View?�??�?�度??�置中顯示  
-                i.setScaleType(ImageView.ScaleType.FIT_CENTER);  
-                i.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,  
-                        LayoutParams.MATCH_PARENT));  
-                return i;  
-            }  
-        });
-        
-        // 設置點擊圖片?�??�?�聽事件??��?要用手點擊才觸發??�滑動時不觸發?? 
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {  
-            @Override  
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  
-                Toast.makeText(ChooseObjActivity.this, "點擊圖片 " + (position + 1), Toast.LENGTH_SHORT).show();  
-            }  
-        });          
-        
-        // 設置選中圖片?�??�?�聽事件??�當圖片滑到螢幕正中??��?��為自動選中??  
-        gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  
-            @Override  
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {   
-                if(imgAdapter.getImage() != null){
-        			imageSwitcher.setImageURI(imgAdapter.getImage()[position % imgAdapter.getImage().length]);
-        			singleton.setChoosenObjImageFileName(imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment());
-                    Toast.makeText(ChooseObjActivity.this, "選中圖片 " + imgAdapter.getImage()[position % imgAdapter.getImage().length].getLastPathSegment(), Toast.LENGTH_SHORT).show(); 
-                }else
-        			imageSwitcher.setImageResource(imgAdapter.getImgs()[position % imgAdapter.getImgs().length]);
-            }  
-      
-            @Override  
-            public void onNothingSelected(AdapterView<?> arg0) {  
-                  
-            }  
-        });        
-        
-        gallery.setUnselectedAlpha(0.3f);                   // 設置未選中圖片?�???�?�?度  
-        gallery.setSpacing(40); 
-		
-        gallery.setAdapter(imgAdapter);                     // 設置圖片?�??�?  
-        gallery.setGravity(Gravity.CENTER_HORIZONTAL);      // 設置水平置中顯示  
-        gallery.setSelection(imgAdapter.imgs.length * 100);
+		setImageItem();
         
 		buttonBack = (Button)this.findViewById(R.id.choose_obj_button_back);
 		buttonSelect = (Button)this.findViewById(R.id.choose_obj_button_select);
@@ -108,8 +72,6 @@ public class ChooseObjActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				/*選?�??�?�要使用?�??�?�具OBJ??�要把他告訴給下�?個CameraActivity知?�?*/
-				
 				Intent intent = new Intent();
 				intent.setClass(ChooseObjActivity.this, CameraActivity.class);
 				startActivity(intent);
@@ -119,7 +81,7 @@ public class ChooseObjActivity extends Activity {
 	private BroadcastReceiver mBoradcastReceiver = new BroadcastReceiver(){  
         @Override  
         public void onReceive(Context context, Intent intent) {  
-            if(intent.getAction().equals(MainActivity.BORADCAST_ACTION_EXIT)){//發?�??�?�閉action?�??�?�播  
+            if(intent.getAction().equals(MainActivity.BORADCAST_ACTION_EXIT)){
                 finish();  
             }  
         }  
@@ -156,5 +118,79 @@ public class ChooseObjActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+	}
+	
+	public void setImageItem() {
+		if((mUris = getImage())!=null) {
+			for(int i=0;i<mUris.length;i++){
+				ImageView imageView = new ImageView(this);  
+				imageView.setImageURI(mUris[i]);
+				imageView.setId(i);
+				imageView.setLayoutParams(new LinearLayout.LayoutParams(IMAGE_ITEM_SIZE,IMAGE_ITEM_SIZE,1.0f));
+				imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				imageView.setBackgroundColor(0xFF000000);
+				imageView.setOnClickListener(new ImageView.OnClickListener(){
+
+					@Override
+					public void onClick(View view) {
+						// TODO Auto-generated method stub
+	        			singleton.setChoosenObjImageFileName(mUris[view.getId()].getLastPathSegment());
+						imageSwitcher.setImageURI(mUris[view.getId()]);
+					}
+					
+				});
+				HSVLayout.addView(imageView);
+			}
+			
+		}else
+			for(int i=0;i<imgs.length;i++){
+				ImageView imageView = new ImageView(this);  
+				imageView.setImageResource(imgs[i]);
+				imageView.setId(i);
+				imageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT,1.0f));
+				imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+				imageView.setBackgroundColor(0xFF000000);
+				imageView.setOnClickListener(new ImageView.OnClickListener(){
+
+					@Override
+					public void onClick(View view) {
+						// TODO Auto-generated method stub
+						imageSwitcher.setImageResource(imgs[view.getId()]);
+					}
+					
+				});
+				HSVLayout.addView(imageView);
+			}
+	}
+	
+	public Uri[] getImage(){
+		//File images = Environment.getExternalStorageDirectory();
+		File images = new File(singleton.getObjLoadPath()+IMAGE_DIR);
+		File[] imagelist = images.listFiles(new FilenameFilter(){
+			public boolean accept(File dir , String name){
+				return(name.endsWith(".jpg")||name.endsWith(".png"));
+			}
+		});
+		
+		if(imagelist==null)
+			return null;
+		
+		mFiles = new String[imagelist.length];
+		for(int i=0;i<imagelist.length;i++)
+			mFiles[i] = imagelist[i].getAbsolutePath();
+		
+		mUris = new Uri[mFiles.length];
+		for(int i=0;i<mFiles.length;i++)
+			mUris[i] = Uri.parse(mFiles[i]);
+		
+		return mUris;
+	}
+	@Override
+	public View makeView() {
+        ImageView i = new ImageView(ChooseObjActivity.this);  
+        i.setScaleType(ImageView.ScaleType.FIT_CENTER);  
+        i.setLayoutParams(new ImageSwitcher.LayoutParams(LayoutParams.MATCH_PARENT,  
+                LayoutParams.MATCH_PARENT));  
+        return i;  
 	}
 }

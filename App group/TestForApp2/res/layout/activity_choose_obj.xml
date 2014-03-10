@@ -35,20 +35,29 @@
         android:text="@string/button_select"
         android:textColor="@drawable/white" />
 
-    <Gallery
-        android:id="@+id/gallery"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/choose_obj_button_back"
-        android:layout_below="@+id/choose_obj_text_title"
-        android:layout_marginTop="14dp" />
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp" 
+        android:layout_below="@+id/choose_obj_text_title">
+
+        <LinearLayout
+            android:id="@+id/HSVLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <ImageSwitcher
         android:id="@+id/imageSwitcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" >
+        android:layout_above="@+id/choose_obj_button_back"
+        android:layout_alignLeft="@+id/choose_obj_button_back"
+        android:layout_below="@+id/horizontalScrollView1" >
+
     </ImageSwitcher>
 
 </RelativeLayout>
